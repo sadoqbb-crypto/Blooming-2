@@ -7,232 +7,463 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  --amber:#C4832A;--amber-light:#D9973E;--amber-pale:#F0C878;--amber-dim:#8B5A1A;
-  --brown:#3D1A0A;--brown-mid:#4E220D;--brown-surf:#5C2D0E;
-  --cream:#F5E6D3;--cream-dark:#E8D0B0;--cream-border:#D4B890;
-  --text-dark:#F5E6D3;--text-muted:#C4A882;--text-dim:#8B6B45;
-  --r:14px;--rs:9px;
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --amber:       #C4832A;
+  --amber-light: #D9973E;
+  --amber-pale:  #F0C878;
+  --amber-dim:   #8B5A1A;
+  --brown:       #3D1A0A;
+  --brown-mid:   #4E220D;
+  --brown-surf:  #5C2D0E;
+  --cream:       #F5E6D3;
+  --cream-dark:  #E8D0B0;
+  --cream-bd:    #D4B890;
+  --text-lt:     #F5E6D3;
+  --text-mu:     #C4A882;
+  --text-di:     #8B6B45;
+  --r:  14px;
+  --rs:  9px;
+  --sb: 240px;
 }
-html,body{min-height:100vh;background:var(--cream);font-family:'Jost',sans-serif;color:var(--brown);-webkit-font-smoothing:antialiased;}
 
-/* ── LAYOUT ── */
-.wrap{display:grid;grid-template-columns:220px 1fr;min-height:100vh;}
-
-/* ── SIDEBAR ── */
-.sidebar{
-  background:var(--brown);padding:28px 16px;
-  position:fixed;top:0;left:0;width:220px;height:100vh;
-  overflow-y:auto;display:flex;flex-direction:column;z-index:100;
+html { font-size: 14px; }
+body {
+  min-height: 100vh;
+  background: var(--cream);
+  font-family: 'Jost', sans-serif;
+  color: var(--brown);
+  -webkit-font-smoothing: antialiased;
 }
-.sb-logo{text-align:center;padding-bottom:24px;border-bottom:1px solid rgba(196,131,42,0.18);margin-bottom:24px;}
-.sb-ring{
-  width:60px;height:60px;border-radius:50%;
-  border:1.5px solid rgba(196,131,42,0.3);background:rgba(196,131,42,0.07);
-  display:flex;align-items:center;justify-content:center;margin:0 auto 12px;
+
+/* ════════════════════════════════════════
+   LAYOUT — sidebar fixed, main scrolls
+═══════════════════════════════════════ */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--sb);
+  height: 100vh;
+  background: var(--brown);
+  padding: 28px 18px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  z-index: 50;
 }
-.sb-ring img{width:44px;height:44px;object-fit:contain;filter:brightness(0.5) sepia(1) saturate(3) hue-rotate(5deg) brightness(1.4);}
-.sb-name{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--amber-pale);letter-spacing:0.05em;}
-.sb-sub{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-dim);margin-top:4px;}
 
-.nav-sec{font-size:9px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;padding:0 6px;}
-.nav-item{
-  display:flex;align-items:center;gap:9px;padding:9px 10px;
-  border-radius:var(--rs);font-size:12px;color:var(--text-muted);
-  cursor:pointer;margin-bottom:2px;transition:background 0.15s,color 0.15s;
+.main {
+  margin-left: var(--sb);
+  min-height: 100vh;
+  padding: 32px 32px 60px;
+  /* Critical — allows the grid inside to use full available width */
+  width: calc(100% - var(--sb));
 }
-.nav-item svg{width:15px;height:15px;flex-shrink:0;}
-.nav-item:hover{background:rgba(196,131,42,0.08);color:var(--text-dark);}
-.nav-item.active{background:rgba(196,131,42,0.14);color:var(--amber-pale);font-weight:500;}
 
-.filter-sec{margin-top:20px;}
-.filter-lbl{font-size:9px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-dim);margin-bottom:7px;}
-.filter-sel{
-  width:100%;background:rgba(196,131,42,0.06);border:1px solid rgba(196,131,42,0.2);
-  border-radius:var(--rs);padding:8px 10px;font-family:'Jost',sans-serif;
-  font-size:12px;color:var(--text-dark);outline:none;cursor:pointer;margin-bottom:14px;
+/* ════════════════════════════════════════
+   SIDEBAR CONTENTS
+═══════════════════════════════════════ */
+.sb-brand {
+  text-align: center;
+  padding-bottom: 22px;
+  border-bottom: 1px solid rgba(196,131,42,0.18);
+  margin-bottom: 22px;
 }
-.sb-footer{margin-top:auto;padding-top:20px;border-top:1px solid rgba(196,131,42,0.12);}
-.sb-updated{font-size:10px;color:var(--text-dim);text-align:center;line-height:1.5;}
-
-/* ── MAIN ── */
-.main{margin-left:220px;padding:28px 24px 48px;min-height:100vh;}
-
-.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
-.page-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--brown);line-height:1;}
-.page-sub{font-size:12px;color:var(--text-dim);margin-top:3px;}
-
-.btn-refresh{
-  display:flex;align-items:center;gap:7px;padding:9px 16px;
-  border-radius:var(--rs);background:var(--brown);border:none;
-  font-family:'Jost',sans-serif;font-size:11px;font-weight:500;
-  letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dark);
-  cursor:pointer;transition:background 0.2s;
+.sb-ring {
+  width: 64px; height: 64px; border-radius: 50%;
+  border: 1.5px solid rgba(196,131,42,0.3);
+  background: rgba(196,131,42,0.07);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 12px;
 }
-.btn-refresh:hover{background:var(--brown-mid);}
-.btn-refresh svg{width:13px;height:13px;}
-.btn-refresh.spinning svg{animation:spin 0.8s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-
-/* ── LOADING / ERROR ── */
-.loading-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:14px;}
-.loading-spin{width:38px;height:38px;border:3px solid rgba(196,131,42,0.2);border-top-color:var(--amber);border-radius:50%;animation:spin 0.8s linear infinite;}
-.loading-txt{font-size:13px;color:var(--text-dim);}
-.err-box{background:rgba(208,96,80,0.07);border:1px solid rgba(208,96,80,0.2);border-radius:var(--r);padding:18px 20px;margin-bottom:20px;display:none;}
-.err-box.show{display:block;}
-.err-title{font-size:13px;font-weight:500;color:#B83A2A;margin-bottom:4px;}
-.err-body{font-size:12px;color:#8B5A50;line-height:1.5;}
-
-/* ── STAT CARDS ── */
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
-.stat-card{
-  background:var(--brown);border-radius:var(--r);padding:18px;
-  border:1px solid rgba(196,131,42,0.1);position:relative;overflow:hidden;
+.sb-ring img {
+  width: 48px; height: 48px; object-fit: contain;
+  filter: brightness(0.5) sepia(1) saturate(3) hue-rotate(5deg) brightness(1.4);
 }
-.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--amber);}
-.stat-icon{width:34px;height:34px;border-radius:8px;background:rgba(196,131,42,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
-.stat-icon svg{width:17px;height:17px;}
-.stat-val{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;color:var(--amber-pale);line-height:1;margin-bottom:3px;}
-.stat-lbl{font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-dim);}
-.stat-note{font-size:11px;color:var(--text-muted);margin-top:5px;}
-
-/* ── PANELS ── */
-.panel{background:#fff;border:1px solid var(--cream-border);border-radius:var(--r);padding:20px;overflow:hidden;}
-.panel-dark{background:var(--brown);border:1px solid rgba(196,131,42,0.1);border-radius:var(--r);padding:20px;}
-.p-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--brown);margin-bottom:3px;}
-.p-title-lt{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--amber-pale);margin-bottom:3px;}
-.p-sub{font-size:11px;color:#8B6B45;margin-bottom:16px;}
-.p-sub-lt{font-size:11px;color:var(--text-dim);margin-bottom:16px;}
-
-.row-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
-.row-3{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px;}
-.row-3b{display:grid;grid-template-columns:1fr 2fr;gap:16px;margin-bottom:16px;}
-
-/* ── CHARTS ── */
-.chart-h{position:relative;height:200px;}
-.chart-h-sm{position:relative;height:170px;}
-.chart-h-lg{position:relative;height:240px;}
-
-/* ── PRODUCT LIST ── */
-.prod-list{display:flex;flex-direction:column;gap:9px;}
-.prod-row{display:flex;align-items:center;gap:10px;}
-.prod-rank{width:22px;height:22px;border-radius:50%;background:rgba(196,131,42,0.1);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--amber);flex-shrink:0;}
-.prod-rank.gold{background:var(--amber);color:var(--brown);}
-.prod-name{flex:1;font-size:13px;color:var(--brown);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.prod-name-lt{flex:1;font-size:13px;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.prod-tag{font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:2px 7px;border-radius:20px;flex-shrink:0;}
-.prod-tag.drink{background:rgba(196,131,42,0.1);color:var(--amber-dim);}
-.prod-tag.food{background:rgba(92,45,14,0.1);color:var(--brown-mid);}
-.prod-bar-wrap{width:70px;height:5px;background:rgba(196,131,42,0.1);border-radius:3px;overflow:hidden;flex-shrink:0;}
-.prod-bar{height:100%;background:var(--amber);border-radius:3px;transition:width 0.6s ease;}
-.prod-bar-lt{height:100%;background:var(--amber-pale);border-radius:3px;transition:width 0.6s ease;}
-.prod-count{font-size:13px;font-weight:500;color:var(--brown);min-width:22px;text-align:right;flex-shrink:0;}
-.prod-count-lt{font-size:13px;font-weight:500;color:var(--amber-pale);min-width:22px;text-align:right;flex-shrink:0;}
-
-/* ── CUSTOMER TABLE ── */
-.c-table{width:100%;border-collapse:collapse;}
-.c-table th{font-size:9px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-dim);padding:0 0 9px;text-align:left;border-bottom:1px solid rgba(196,131,42,0.15);}
-.c-table td{font-size:12px;color:var(--text-dark);padding:9px 0;border-bottom:1px solid rgba(196,131,42,0.07);vertical-align:middle;}
-.c-table tr:last-child td{border-bottom:none;}
-.badge{font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:2px 7px;border-radius:20px;display:inline-block;}
-.badge.vip{background:rgba(240,200,120,0.15);color:var(--amber-pale);}
-.badge.regular{background:rgba(196,131,42,0.1);color:var(--text-muted);}
-.badge.newc{background:rgba(126,200,138,0.15);color:#7EC88A;}
-
-/* ── POINTS PROGRESS TABLE ── */
-.pts-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-.pts-phone{font-size:12px;color:var(--text-dark);min-width:100px;}
-.pts-track{flex:1;height:5px;background:rgba(196,131,42,0.1);border-radius:3px;overflow:hidden;}
-.pts-fill{height:100%;background:linear-gradient(90deg,var(--amber),var(--amber-pale));border-radius:3px;}
-.pts-num-sm{font-size:11px;color:var(--amber-pale);min-width:50px;text-align:right;flex-shrink:0;}
-
-/* ── DAY HEATMAP ── */
-.day-labels{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:5px;}
-.day-lbl{font-size:9px;text-align:center;color:var(--text-dim);letter-spacing:0.06em;}
-.day-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
-.day-cell{aspect-ratio:1;border-radius:4px;background:rgba(196,131,42,0.07);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:var(--text-dim);}
-.day-cell[data-l="1"]{background:rgba(196,131,42,0.2);}
-.day-cell[data-l="2"]{background:rgba(196,131,42,0.4);color:var(--brown-mid);}
-.day-cell[data-l="3"]{background:rgba(196,131,42,0.65);color:var(--brown);}
-.day-cell[data-l="4"]{background:var(--amber);color:var(--brown);}
-
-/* ── KPI MINI ── */
-.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
-.kpi{background:var(--cream-dark);border:1px solid var(--cream-border);border-radius:var(--rs);padding:14px 12px;text-align:center;}
-.kpi-v{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--brown);line-height:1;}
-.kpi-l{font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-dim);margin-top:3px;}
-
-/* ── EMPTY ── */
-.empty{font-size:12px;color:var(--text-dim);text-align:center;padding:24px 0;}
-.empty-lt{font-size:12px;color:var(--text-dim);text-align:center;padding:24px 0;}
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:rgba(196,131,42,0.2);border-radius:2px;}
-
-/* ── RESPONSIVE ── */
-@media(max-width:900px){
-  .wrap{grid-template-columns:1fr;}
-  .sidebar{display:none;}
-  .main{margin-left:0;padding:20px 16px 40px;}
-  .stats-grid{grid-template-columns:repeat(2,1fr);}
-  .row-2,.row-3,.row-3b{grid-template-columns:1fr;}
+.sb-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 600;
+  color: var(--amber-pale); letter-spacing: 0.05em;
 }
+.sb-tag {
+  font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--text-di); margin-top: 4px;
+}
+
+.sb-section {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--text-di);
+  margin: 0 0 8px 6px;
+}
+.sb-nav {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 10px; border-radius: var(--rs);
+  font-size: 12px; color: var(--text-mu);
+  margin-bottom: 2px;
+  background: rgba(196,131,42,0.12);
+  color: var(--amber-pale); font-weight: 500;
+}
+.sb-nav svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+.sb-filters { margin-top: 20px; }
+.sb-flbl {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--text-di); margin-bottom: 6px;
+}
+.sb-sel {
+  width: 100%; background: rgba(196,131,42,0.06);
+  border: 1px solid rgba(196,131,42,0.2); border-radius: var(--rs);
+  padding: 9px 10px; font-family: 'Jost', sans-serif;
+  font-size: 12px; color: var(--text-lt);
+  outline: none; cursor: pointer; margin-bottom: 14px;
+  appearance: auto;
+}
+
+.sb-foot {
+  margin-top: auto; padding-top: 18px;
+  border-top: 1px solid rgba(196,131,42,0.12);
+  text-align: center;
+}
+.sb-updated { font-size: 10px; color: var(--text-di); line-height: 1.5; }
+
+/* ════════════════════════════════════════
+   TOP BAR
+═══════════════════════════════════════ */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 28px; flex-wrap: wrap; gap: 12px;
+}
+.topbar-left h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px; font-weight: 600;
+  color: var(--brown); line-height: 1;
+}
+.topbar-left p { font-size: 12px; color: var(--text-di); margin-top: 3px; }
+
+.btn-refresh {
+  display: flex; align-items: center; gap: 7px;
+  padding: 10px 18px; border-radius: var(--rs);
+  background: var(--brown); border: none;
+  font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-lt); cursor: pointer;
+  transition: background 0.2s; white-space: nowrap;
+}
+.btn-refresh:hover { background: var(--brown-mid); }
+.btn-refresh svg { width: 13px; height: 13px; flex-shrink: 0; }
+.btn-refresh.spinning svg { animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ════════════════════════════════════════
+   STATES
+═══════════════════════════════════════ */
+.loading-wrap {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-height: 50vh; gap: 14px;
+}
+.loading-spin {
+  width: 40px; height: 40px;
+  border: 3px solid rgba(196,131,42,0.2);
+  border-top-color: var(--amber);
+  border-radius: 50%; animation: spin 0.8s linear infinite;
+}
+.loading-txt { font-size: 13px; color: var(--text-di); }
+
+.err-box {
+  background: rgba(208,96,80,0.07);
+  border: 1px solid rgba(208,96,80,0.2);
+  border-radius: var(--r); padding: 18px 20px;
+  margin-bottom: 20px; display: none;
+}
+.err-box.show { display: block; }
+.err-title { font-size: 13px; font-weight: 500; color: #B83A2A; margin-bottom: 4px; }
+.err-body { font-size: 12px; color: #8B5A50; line-height: 1.5; white-space: pre-line; }
+
+/* ════════════════════════════════════════
+   STAT CARDS — 4 columns
+═══════════════════════════════════════ */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.stat-card {
+  background: var(--brown); border-radius: var(--r);
+  padding: 20px 18px;
+  border: 1px solid rgba(196,131,42,0.1);
+  position: relative; overflow: hidden;
+  min-width: 0;
+}
+.stat-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: var(--amber);
+}
+.stat-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: rgba(196,131,42,0.1);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px;
+}
+.stat-icon svg { width: 18px; height: 18px; }
+.stat-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 34px; font-weight: 700;
+  color: var(--amber-pale); line-height: 1; margin-bottom: 3px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.stat-lbl {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-di);
+}
+.stat-note { font-size: 11px; color: var(--text-mu); margin-top: 5px; }
+
+/* ════════════════════════════════════════
+   GRID ROWS
+═══════════════════════════════════════ */
+.row { display: grid; gap: 16px; margin-bottom: 16px; }
+.row-2-1 { grid-template-columns: 2fr 1fr; }
+.row-1-2 { grid-template-columns: 1fr 2fr; }
+.row-2   { grid-template-columns: 1fr 1fr; }
+.row-3   { grid-template-columns: 1fr 1fr 1fr; }
+
+/* ════════════════════════════════════════
+   PANELS
+═══════════════════════════════════════ */
+.panel {
+  background: #fff;
+  border: 1px solid var(--cream-bd);
+  border-radius: var(--r); padding: 20px;
+  min-width: 0; overflow: hidden;
+}
+.panel-dark {
+  background: var(--brown);
+  border: 1px solid rgba(196,131,42,0.1);
+  border-radius: var(--r); padding: 20px;
+  min-width: 0; overflow: hidden;
+}
+.p-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px; font-weight: 600;
+  color: var(--brown); margin-bottom: 3px;
+}
+.p-title-lt {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px; font-weight: 600;
+  color: var(--amber-pale); margin-bottom: 3px;
+}
+.p-sub  { font-size: 11px; color: var(--text-di); margin-bottom: 16px; }
+.p-sub-lt { font-size: 11px; color: var(--text-di); margin-bottom: 16px; }
+
+/* ════════════════════════════════════════
+   CHARTS
+═══════════════════════════════════════ */
+.ch    { position: relative; height: 200px; }
+.ch-lg { position: relative; height: 240px; }
+.ch-sm { position: relative; height: 160px; }
+
+/* ════════════════════════════════════════
+   PRODUCT ROWS
+═══════════════════════════════════════ */
+.prod-list { display: flex; flex-direction: column; gap: 9px; }
+.prod-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.prod-rank {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(196,131,42,0.1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 600; color: var(--amber);
+  flex-shrink: 0;
+}
+.prod-rank.gold { background: var(--amber); color: var(--brown); }
+.prod-name {
+  flex: 1; font-size: 13px; color: var(--brown);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  min-width: 0;
+}
+.prod-name-lt {
+  flex: 1; font-size: 13px; color: var(--text-lt);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  min-width: 0;
+}
+.prod-tag {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 2px 7px; border-radius: 20px; flex-shrink: 0;
+}
+.prod-tag.drink { background: rgba(196,131,42,0.1); color: var(--amber-dim); }
+.prod-tag.food  { background: rgba(92,45,14,0.1);  color: var(--brown-mid); }
+.prod-bar-bg { width: 70px; height: 5px; background: rgba(196,131,42,0.1); border-radius: 3px; overflow: hidden; flex-shrink: 0; }
+.prod-bar-bg-lt { width: 70px; height: 5px; background: rgba(196,131,42,0.1); border-radius: 3px; overflow: hidden; flex-shrink: 0; }
+.prod-bar    { height: 100%; background: var(--amber);      border-radius: 3px; transition: width 0.6s; }
+.prod-bar-lt { height: 100%; background: var(--amber-pale); border-radius: 3px; transition: width 0.6s; }
+.prod-ct     { font-size: 13px; font-weight: 500; color: var(--brown);      min-width: 26px; text-align: right; flex-shrink: 0; }
+.prod-ct-lt  { font-size: 13px; font-weight: 500; color: var(--amber-pale); min-width: 26px; text-align: right; flex-shrink: 0; }
+
+/* ════════════════════════════════════════
+   CUSTOMER TABLE
+═══════════════════════════════════════ */
+.c-table { width: 100%; border-collapse: collapse; }
+.c-table th {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--text-di);
+  padding: 0 0 8px; text-align: left;
+  border-bottom: 1px solid rgba(196,131,42,0.15);
+}
+.c-table td {
+  font-size: 12px; color: var(--text-lt);
+  padding: 8px 0; border-bottom: 1px solid rgba(196,131,42,0.07);
+  vertical-align: middle; max-width: 120px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.c-table tr:last-child td { border-bottom: none; }
+.badge {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 2px 7px;
+  border-radius: 20px; display: inline-block; white-space: nowrap;
+}
+.badge.vip     { background: rgba(240,200,120,0.15); color: var(--amber-pale); }
+.badge.regular { background: rgba(196,131,42,0.1);   color: var(--text-mu); }
+.badge.newc    { background: rgba(126,200,138,0.15);  color: #7EC88A; }
+
+/* ════════════════════════════════════════
+   POINTS PROGRESS
+═══════════════════════════════════════ */
+.pts-rows { display: flex; flex-direction: column; gap: 10px; }
+.pts-row  { display: flex; align-items: center; gap: 10px; }
+.pts-ph   { font-size: 12px; color: var(--brown); min-width: 110px; flex-shrink: 0; }
+.pts-track { flex: 1; height: 6px; background: rgba(196,131,42,0.12); border-radius: 3px; overflow: hidden; }
+.pts-fill  { height: 100%; background: linear-gradient(90deg, var(--amber), var(--amber-pale)); border-radius: 3px; transition: width 0.6s; }
+.pts-num   { font-size: 11px; color: var(--amber-dim); min-width: 56px; text-align: right; flex-shrink: 0; }
+
+/* ════════════════════════════════════════
+   DAY HEATMAP
+═══════════════════════════════════════ */
+.day-head  { display: grid; grid-template-columns: repeat(7,1fr); gap: 5px; margin-bottom: 5px; }
+.day-lbl   { font-size: 9px; text-align: center; color: var(--text-di); letter-spacing: 0.05em; }
+.day-grid  { display: grid; grid-template-columns: repeat(7,1fr); gap: 5px; }
+.day-cell  {
+  aspect-ratio: 1; border-radius: 4px;
+  background: rgba(196,131,42,0.07);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 500; color: transparent;
+}
+.day-cell[data-l="1"] { background: rgba(196,131,42,0.2); color: var(--text-di); }
+.day-cell[data-l="2"] { background: rgba(196,131,42,0.4); color: var(--brown-mid); }
+.day-cell[data-l="3"] { background: rgba(196,131,42,0.65); color: var(--brown); }
+.day-cell[data-l="4"] { background: var(--amber); color: var(--brown); }
+
+/* ════════════════════════════════════════
+   KPI BOXES
+═══════════════════════════════════════ */
+.kpi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+.kpi { background: var(--cream-dark); border: 1px solid var(--cream-bd); border-radius: var(--rs); padding: 16px; text-align: center; }
+.kpi-v { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 700; color: var(--brown); line-height: 1; }
+.kpi-l { font-size: 9px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-di); margin-top: 4px; }
+
+/* ════════════════════════════════════════
+   CAT PILLS
+═══════════════════════════════════════ */
+.cat-pills { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 12px; }
+.cat-pill {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 10px; border-radius: 20px;
+  background: rgba(196,131,42,0.07);
+  border: 1px solid rgba(196,131,42,0.18);
+  font-size: 11px; color: var(--amber-dim);
+}
+.cat-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+/* ════════════════════════════════════════
+   EMPTY STATE
+═══════════════════════════════════════ */
+.empty    { font-size: 12px; color: var(--text-di);  text-align: center; padding: 20px 0; }
+.empty-lt { font-size: 12px; color: var(--text-di);  text-align: center; padding: 20px 0; }
+
+/* ════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════ */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(196,131,42,0.2); border-radius: 3px; }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-<!-- ── SIDEBAR ── -->
+<!-- ══════════════════════════════════════
+     SIDEBAR
+══════════════════════════════════════ -->
 <aside class="sidebar">
-  <div class="sb-logo">
+  <div class="sb-brand">
     <div class="sb-ring">
-      <img src="logo.png" alt="" onerror="this.style.display='none'">
+      <img src="logo.png" alt=""
+        onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <svg style="display:none" viewBox="0 0 48 48" fill="none" width="36" height="36">
+        <ellipse cx="24" cy="12" rx="6" ry="9" stroke="#C4832A" stroke-width="1.5"/>
+        <line x1="24" y1="7" x2="24" y2="17" stroke="#C4832A" stroke-width="1.4" stroke-linecap="round"/>
+        <ellipse cx="12" cy="24" rx="9" ry="6" stroke="#C4832A" stroke-width="1.5"/>
+        <line x1="7" y1="24" x2="17" y2="24" stroke="#C4832A" stroke-width="1.4" stroke-linecap="round"/>
+        <ellipse cx="36" cy="24" rx="9" ry="6" stroke="#C4832A" stroke-width="1.5"/>
+        <line x1="31" y1="24" x2="41" y2="24" stroke="#C4832A" stroke-width="1.4" stroke-linecap="round"/>
+        <ellipse cx="24" cy="36" rx="6" ry="9" stroke="#C4832A" stroke-width="1.5"/>
+        <line x1="24" y1="31" x2="24" y2="41" stroke="#C4832A" stroke-width="1.4" stroke-linecap="round"/>
+        <circle cx="24" cy="24" r="4" stroke="#C4832A" stroke-width="1.5"/>
+      </svg>
     </div>
     <div class="sb-name">Blooming Café</div>
-    <div class="sb-sub">Dashboard</div>
+    <div class="sb-tag">Dashboard</div>
   </div>
 
-  <div class="nav-sec">Analytics</div>
-  <div class="nav-item active">
-    <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="#C4832A" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="#C4832A" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="#C4832A" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="#C4832A" stroke-width="1.2"/></svg>
+  <div class="sb-section">Analytics</div>
+  <div class="sb-nav">
+    <svg viewBox="0 0 16 16" fill="none">
+      <rect x="1" y="1" width="6" height="6" rx="1" stroke="#F0C878" stroke-width="1.2"/>
+      <rect x="9" y="1" width="6" height="6" rx="1" stroke="#F0C878" stroke-width="1.2"/>
+      <rect x="1" y="9" width="6" height="6" rx="1" stroke="#F0C878" stroke-width="1.2"/>
+      <rect x="9" y="9" width="6" height="6" rx="1" stroke="#F0C878" stroke-width="1.2"/>
+    </svg>
     Overview
   </div>
 
-  <div class="filter-sec">
-    <div class="nav-sec" style="margin-top:0;">Filters</div>
-    <div class="filter-lbl">Time Range</div>
-    <select class="filter-sel" id="range-sel" onchange="render()">
+  <div class="sb-filters">
+    <div class="sb-section" style="margin-top:16px;">Filters</div>
+    <div class="sb-flbl">Time Range</div>
+    <select class="sb-sel" id="range-sel" onchange="render()">
       <option value="7">Last 7 days</option>
       <option value="14">Last 14 days</option>
       <option value="30" selected>Last 30 days</option>
       <option value="90">Last 90 days</option>
       <option value="all">All time</option>
     </select>
-
-    <div class="filter-lbl">Item Type</div>
-    <select class="filter-sel" id="type-sel" onchange="render()">
+    <div class="sb-flbl">Item Type</div>
+    <select class="sb-sel" id="type-sel" onchange="render()">
       <option value="all">All items</option>
       <option value="drink">Drinks only</option>
       <option value="food">Food only</option>
     </select>
   </div>
 
-  <div class="sb-footer">
+  <div class="sb-foot">
     <div class="sb-updated" id="sb-updated">Not loaded</div>
   </div>
 </aside>
 
-<!-- ── MAIN ── -->
+<!-- ══════════════════════════════════════
+     MAIN
+══════════════════════════════════════ -->
 <main class="main">
 
   <div class="topbar">
-    <div>
-      <div class="page-title">Analytics Overview</div>
-      <div class="page-sub" id="range-label">Showing last 30 days</div>
+    <div class="topbar-left">
+      <h1>Analytics Overview</h1>
+      <p id="range-label">Showing last 30 days</p>
     </div>
     <button class="btn-refresh" id="btn-r" onclick="loadData()">
-      <svg viewBox="0 0 16 16" fill="none"><path d="M13.5 8A5.5 5.5 0 112.5 5" stroke="#F5E6D3" stroke-width="1.4" stroke-linecap="round"/><path d="M2.5 2v3h3" stroke="#F5E6D3" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg viewBox="0 0 16 16" fill="none">
+        <path d="M13.5 8A5.5 5.5 0 112.5 5" stroke="#F5E6D3" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M2.5 2v3h3" stroke="#F5E6D3" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
       Refresh
     </button>
   </div>
@@ -249,127 +480,158 @@ html,body{min-height:100vh;background:var(--cream);font-family:'Jost',sans-serif
 
   <div id="content" style="display:none;">
 
-    <!-- ── STAT CARDS ── -->
+    <!-- STAT CARDS -->
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-icon"><svg viewBox="0 0 18 18" fill="none"><path d="M9 1l2.2 4.5L16 6.4l-3.5 3.4.8 4.7L9 12l-4.3 2.5.8-4.7L2 6.4l4.8-.9L9 1z" stroke="#C4832A" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+        <div class="stat-icon">
+          <svg viewBox="0 0 18 18" fill="none">
+            <path d="M9 1l2.2 4.5L16 6.4l-3.5 3.4.8 4.7L9 12l-4.3 2.5.8-4.7L2 6.4l4.8-.9L9 1z" stroke="#C4832A" stroke-width="1.2" stroke-linejoin="round"/>
+          </svg>
+        </div>
         <div class="stat-val" id="s-visits">—</div>
         <div class="stat-lbl">Total Visits</div>
         <div class="stat-note" id="s-visits-note">—</div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon"><svg viewBox="0 0 18 18" fill="none"><circle cx="9" cy="7" r="3.5" stroke="#C4832A" stroke-width="1.2"/><path d="M2 16c0-3 3.1-5.5 7-5.5s7 2.5 7 5.5" stroke="#C4832A" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div class="stat-icon">
+          <svg viewBox="0 0 18 18" fill="none">
+            <circle cx="9" cy="7" r="3.5" stroke="#C4832A" stroke-width="1.2"/>
+            <path d="M2 16c0-3 3.1-5.5 7-5.5s7 2.5 7 5.5" stroke="#C4832A" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
         <div class="stat-val" id="s-customers">—</div>
         <div class="stat-lbl">Customers</div>
         <div class="stat-note" id="s-customers-note">—</div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon"><svg viewBox="0 0 18 18" fill="none"><path d="M3 3h12l-1.5 8H4.5L3 3z" stroke="#C4832A" stroke-width="1.2" stroke-linejoin="round"/><path d="M4.5 11c0 2.5 2 4.5 4.5 4.5S13.5 13.5 13.5 11" stroke="#C4832A" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div class="stat-icon">
+          <svg viewBox="0 0 18 18" fill="none">
+            <path d="M3 3h12l-1.5 8H4.5L3 3z" stroke="#C4832A" stroke-width="1.2" stroke-linejoin="round"/>
+            <path d="M4.5 11c0 2.5 2 4.5 4.5 4.5S13.5 13.5 13.5 11" stroke="#C4832A" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
         <div class="stat-val" id="s-bestseller">—</div>
         <div class="stat-lbl">Best Seller</div>
         <div class="stat-note" id="s-bestseller-note">—</div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon"><svg viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="#C4832A" stroke-width="1.2"/><path d="M9 5v4l2.5 2.5" stroke="#C4832A" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div class="stat-icon">
+          <svg viewBox="0 0 18 18" fill="none">
+            <circle cx="9" cy="9" r="7" stroke="#C4832A" stroke-width="1.2"/>
+            <path d="M9 5v4l2.5 2.5" stroke="#C4832A" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
         <div class="stat-val" id="s-rewards">—</div>
         <div class="stat-lbl">Rewards Claimed</div>
         <div class="stat-note" id="s-rewards-note">—</div>
       </div>
     </div>
 
-    <!-- ── VISITS + CATEGORY ── -->
-    <div class="row-3">
+    <!-- VISITS CHART + CATEGORY -->
+    <div class="row row-2-1">
       <div class="panel">
         <div class="p-title">Visits Over Time</div>
-        <div class="p-sub" id="visits-chart-sub">Daily check-ins</div>
-        <div class="chart-h-lg"><canvas id="visits-chart"></canvas></div>
+        <div class="p-sub">Daily check-ins for selected period</div>
+        <div class="ch-lg"><canvas id="visits-chart"></canvas></div>
       </div>
       <div class="panel">
-        <div class="p-title">Order Breakdown</div>
-        <div class="p-sub">Drink vs Food split</div>
-        <div class="chart-h"><canvas id="cat-chart"></canvas></div>
-        <div id="cat-pills" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;"></div>
+        <div class="p-title">Order Split</div>
+        <div class="p-sub">Drink vs Food breakdown</div>
+        <div class="ch"><canvas id="cat-chart"></canvas></div>
+        <div class="cat-pills" id="cat-pills"></div>
       </div>
     </div>
 
-    <!-- ── BEST SELLERS + WEEKLY ── -->
-    <div class="row-2">
+    <!-- BEST SELLERS + THIS WEEK -->
+    <div class="row row-2">
       <div class="panel">
         <div class="p-title">🏆 Best Selling Items</div>
-        <div class="p-sub">All time — ranked by total units sold</div>
-        <div class="prod-list" id="all-time-list"><div class="empty">No data</div></div>
+        <div class="p-sub">All time — ranked by units sold</div>
+        <div class="prod-list" id="all-list"><div class="empty">No data yet</div></div>
       </div>
       <div class="panel">
-        <div class="p-title">This Week's Top Items</div>
+        <div class="p-title">This Week's Items</div>
         <div class="p-sub">Orders in the last 7 days</div>
-        <div class="prod-list" id="week-list"><div class="empty">No data</div></div>
+        <div class="prod-list" id="week-list"><div class="empty">No data yet</div></div>
       </div>
     </div>
 
-    <!-- ── DRINK RANK + FOOD RANK ── -->
-    <div class="row-2" style="margin-bottom:16px;">
+    <!-- DRINKS + FOOD SEPARATE -->
+    <div class="row row-2">
       <div class="panel-dark">
         <div class="p-title-lt">☕ Top Drinks</div>
         <div class="p-sub-lt">Most ordered drinks</div>
-        <div class="prod-list" id="drink-list"><div class="empty-lt">No drinks recorded</div></div>
+        <div class="prod-list" id="drink-list"><div class="empty-lt">No drinks yet</div></div>
       </div>
       <div class="panel-dark">
         <div class="p-title-lt">🥐 Top Food</div>
         <div class="p-sub-lt">Most ordered food items</div>
-        <div class="prod-list" id="food-list"><div class="empty-lt">No food recorded</div></div>
+        <div class="prod-list" id="food-list"><div class="empty-lt">No food yet</div></div>
       </div>
     </div>
 
-    <!-- ── DAY PATTERN + TOP CUSTOMERS ── -->
-    <div class="row-3b">
+    <!-- DAY PATTERN + TOP CUSTOMERS -->
+    <div class="row row-1-2">
       <div class="panel">
         <div class="p-title">Busiest Days</div>
         <div class="p-sub">Visits by day of week</div>
-        <div class="day-labels">
-          <div class="day-lbl">Mon</div><div class="day-lbl">Tue</div><div class="day-lbl">Wed</div>
-          <div class="day-lbl">Thu</div><div class="day-lbl">Fri</div><div class="day-lbl">Sat</div>
+        <div class="day-head">
+          <div class="day-lbl">Mon</div><div class="day-lbl">Tue</div>
+          <div class="day-lbl">Wed</div><div class="day-lbl">Thu</div>
+          <div class="day-lbl">Fri</div><div class="day-lbl">Sat</div>
           <div class="day-lbl">Sun</div>
         </div>
         <div class="day-grid" id="day-grid"></div>
-        <div class="chart-h-sm" style="margin-top:16px;"><canvas id="day-chart"></canvas></div>
+        <div class="ch-sm" style="margin-top:16px;"><canvas id="day-chart"></canvas></div>
       </div>
       <div class="panel-dark">
         <div class="p-title-lt">Top Customers</div>
-        <div class="p-sub-lt">Ranked by visit count</div>
-        <table class="c-table" id="c-table">
-          <thead><tr><th>Phone</th><th>Visits</th><th>Points</th><th>Status</th></tr></thead>
-          <tbody id="c-body"><tr><td colspan="4"><div class="empty-lt">No data</div></td></tr></tbody>
+        <div class="p-sub-lt">Ranked by total visits</div>
+        <table class="c-table">
+          <thead>
+            <tr>
+              <th>Phone</th>
+              <th>Visits</th>
+              <th>Points</th>
+              <th>Rewards</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="c-body">
+            <tr><td colspan="5"><div class="empty-lt">No data</div></td></tr>
+          </tbody>
         </table>
       </div>
     </div>
 
-    <!-- ── POINTS PROGRESS ── -->
-    <div class="panel" style="margin-bottom:16px;">
-      <div class="p-title">Points Progress — Closest to Reward</div>
-      <div class="p-sub">Customers nearest to the 150pt goal</div>
-      <div id="pts-progress-list"><div class="empty">No data</div></div>
+    <!-- POINTS PROGRESS -->
+    <div class="row" style="margin-bottom:16px;">
+      <div class="panel">
+        <div class="p-title">Points Progress — Closest to Reward (150 pts)</div>
+        <div class="p-sub">See who's about to earn their free item</div>
+        <div class="pts-rows" id="pts-list"><div class="empty">No data yet</div></div>
+      </div>
     </div>
 
-    <!-- ── KPIs ── -->
-    <div class="panel">
-      <div class="p-title">Key Metrics</div>
-      <div class="p-sub">Summary stats for selected period</div>
-      <div class="kpi-row">
+    <!-- KPI METRICS -->
+    <div class="panel" style="margin-bottom:16px;">
+      <div class="p-title" style="margin-bottom:3px;">Key Metrics</div>
+      <div class="p-sub">Summary for selected period</div>
+      <div class="kpi-grid">
         <div class="kpi"><div class="kpi-v" id="k-avg">—</div><div class="kpi-l">Avg Visits / Customer</div></div>
         <div class="kpi"><div class="kpi-v" id="k-vip">—</div><div class="kpi-l">VIP Customers (10+ visits)</div></div>
         <div class="kpi"><div class="kpi-v" id="k-new">—</div><div class="kpi-l">New This Week</div></div>
         <div class="kpi"><div class="kpi-v" id="k-drinks">—</div><div class="kpi-l">Total Drinks Sold</div></div>
         <div class="kpi"><div class="kpi-v" id="k-foods">—</div><div class="kpi-l">Total Food Sold</div></div>
-        <div class="kpi"><div class="kpi-v" id="k-pts">—</div><div class="kpi-l">Total Points Issued</div></div>
+        <div class="kpi"><div class="kpi-v" id="k-pts">—</div><div class="kpi-l">Active Points in System</div></div>
       </div>
     </div>
 
   </div><!-- /content -->
 </main>
-</div>
 
 <script>
-// ── PASTE YOUR APPS SCRIPT URL HERE ───────────────────────
+// ── PASTE YOUR APPS SCRIPT URL HERE ─────────────────────────
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwf5lgEs2u000qdbMy4B58jruJRgyLZhtVUiSgiTlP9YEzqs2NXAJmbuJ2xeOhK4Z4z/exec';
 const GOAL = 150;
 
@@ -381,22 +643,29 @@ function jsonp(url) {
   return new Promise((resolve, reject) => {
     const cb = '_cb_' + Date.now();
     const s  = document.createElement('script');
-    const t  = setTimeout(() => { cleanup(); reject(new Error('Timeout')); }, 15000);
+    const t  = setTimeout(() => { cleanup(); reject(new Error('Timeout after 15s')); }, 15000);
     window[cb] = d => { cleanup(); resolve(d); };
-    function cleanup() { clearTimeout(t); delete window[cb]; s.parentNode && s.parentNode.removeChild(s); }
-    s.onerror = () => { cleanup(); reject(new Error('Network error')); };
+    function cleanup() {
+      clearTimeout(t);
+      delete window[cb];
+      if (s.parentNode) s.parentNode.removeChild(s);
+    }
+    s.onerror = () => { cleanup(); reject(new Error('Network error — check your Apps Script URL and make sure it is deployed with access set to Anyone')); };
     s.src = url + '&callback=' + cb;
     document.head.appendChild(s);
   });
 }
 
-// ── LOAD ───────────────────────────────────────────────────
+// ── LOAD DATA ─────────────────────────────────────────────
 async function loadData() {
   setRefresh(true);
   hideErr();
+  document.getElementById('loading').style.display  = 'flex';
+  document.getElementById('content').style.display  = 'none';
+
   try {
     const data = await jsonp(`${APPS_SCRIPT_URL}?action=getDashboard`);
-    if (!data.success) throw new Error(data.error || 'Server error');
+    if (!data.success) throw new Error(data.error || 'Server returned an error');
     allRows = data.rows || [];
     document.getElementById('loading').style.display  = 'none';
     document.getElementById('content').style.display  = 'block';
@@ -404,315 +673,238 @@ async function loadData() {
     render();
   } catch (e) {
     document.getElementById('loading').style.display = 'none';
-    showErr(e.message + '\n\nCheck your Apps Script URL is correct and redeployed.');
+    showErr(e.message);
   } finally {
     setRefresh(false);
   }
 }
 
-// ── RENDER ─────────────────────────────────────────────────
+// ── RENDER ────────────────────────────────────────────────
 function render() {
-  const days    = document.getElementById('range-sel').value;
-  const typeF   = document.getElementById('type-sel').value;
-  const cutoff  = days === 'all' ? null : new Date(Date.now() - days * 86400000);
-  const label   = days === 'all' ? 'All time' : `Last ${days} days`;
+  const days   = document.getElementById('range-sel').value;
+  const typeF  = document.getElementById('type-sel').value;
+  const cutoff = days === 'all' ? null : new Date(Date.now() - days * 86400000);
+  const label  = days === 'all' ? 'All time' : `Last ${days} days`;
 
   document.getElementById('range-label').textContent = 'Showing ' + label.toLowerCase();
 
-  const rows = allRows.filter(r => {
-    if (cutoff && new Date(r.lastVisit) < cutoff) return false;
-    return true;
-  });
+  const rows = allRows.filter(r => !cutoff || new Date(r.lastVisit) >= cutoff);
 
   renderStats(rows);
   renderVisitsChart(rows, days);
-  renderCatChart(rows, typeF);
-  renderAllTimeBestSellers(rows, typeF);
+  renderCatChart(rows);
+  renderBestSellers(rows, typeF);
   renderWeekItems(allRows, typeF);
-  renderDrinkFoodLists(rows);
+  renderDrinkFood(rows);
   renderDayPattern(rows);
   renderTopCustomers(rows);
   renderPtsProgress(allRows);
   renderKPIs(rows);
 }
 
-// ── STATS ──────────────────────────────────────────────────
+// ── STATS ─────────────────────────────────────────────────
 function renderStats(rows) {
-  const totalVisits = rows.reduce((s,r) => s + r.visitCount, 0);
-  const weekAgo     = new Date(Date.now() - 7*86400000);
-  const newThisWeek = allRows.filter(r => new Date(r.firstVisit) >= weekAgo).length;
-  const totalRewards = allRows.reduce((s,r) => s + r.rewardsClaimed, 0);
+  const totalVisits   = rows.reduce((s,r) => s + r.visitCount, 0);
+  const weekAgo       = new Date(Date.now() - 7*86400000);
+  const newThisWeek   = allRows.filter(r => new Date(r.firstVisit) >= weekAgo).length;
+  const totalRewards  = allRows.reduce((s,r) => s + (r.rewardsClaimed||0), 0);
+  const items         = buildItems(rows, 'all');
+  const top           = items[0];
 
-  // Best seller (by units)
-  const counts = buildItemCounts(rows, 'all');
-  const top    = counts[0];
-
-  document.getElementById('s-visits').textContent         = totalVisits;
-  document.getElementById('s-visits-note').textContent    = `${rows.length} unique customers`;
-  document.getElementById('s-customers').textContent      = rows.length;
-  document.getElementById('s-customers-note').textContent = `${newThisWeek} new this week`;
-  document.getElementById('s-bestseller').textContent     = top ? cap(top.name).substring(0,12) : '—';
-  document.getElementById('s-bestseller-note').textContent = top ? `${top.count} units sold` : 'No data yet';
-  document.getElementById('s-rewards').textContent        = totalRewards;
-  document.getElementById('s-rewards-note').textContent   = `${allRows.filter(r=>r.totalPoints>=100).length} customers near goal`;
+  document.getElementById('s-visits').textContent          = totalVisits;
+  document.getElementById('s-visits-note').textContent     = rows.length + ' unique customers';
+  document.getElementById('s-customers').textContent       = rows.length;
+  document.getElementById('s-customers-note').textContent  = newThisWeek + ' new this week';
+  document.getElementById('s-bestseller').textContent      = top ? cap(top.name).slice(0,11) : '—';
+  document.getElementById('s-bestseller-note').textContent = top ? top.count + ' units sold' : 'No data yet';
+  document.getElementById('s-rewards').textContent         = totalRewards;
+  document.getElementById('s-rewards-note').textContent    = allRows.filter(r=>r.totalPoints>=100).length + ' customers near goal';
 }
 
-// ── VISITS CHART ───────────────────────────────────────────
+// ── VISITS CHART ──────────────────────────────────────────
 function renderVisitsChart(rows, days) {
   const d    = days === 'all' ? 30 : parseInt(days);
   const bkts = {};
-  for (let i = d-1; i >= 0; i--) {
-    bkts[dk(new Date(Date.now() - i*86400000))] = 0;
-  }
-  rows.forEach(r => {
-    const k = dk(new Date(r.lastVisit));
-    if (k in bkts) bkts[k] += r.visitCount;
-  });
-  const labels = Object.keys(bkts).map(k => {
-    const d = new Date(k);
-    return d.toLocaleDateString('en-GB', {day:'numeric',month:'short'});
-  });
-  const vals = Object.values(bkts);
+  for (let i = d-1; i >= 0; i--) bkts[dk(new Date(Date.now()-i*86400000))] = 0;
+  rows.forEach(r => { const k = dk(new Date(r.lastVisit)); if (k in bkts) bkts[k] += r.visitCount; });
 
-  destroyChart('visits');
+  const labels = Object.keys(bkts).map(k => new Date(k).toLocaleDateString('en-GB',{day:'numeric',month:'short'}));
+  const vals   = Object.values(bkts);
+
+  kill('visits');
   charts.visits = new Chart(document.getElementById('visits-chart'), {
     type: 'line',
-    data: {
-      labels,
-      datasets: [{
-        data: vals,
-        borderColor: '#C4832A',
-        backgroundColor: 'rgba(196,131,42,0.07)',
-        borderWidth: 2,
-        pointRadius: d <= 14 ? 4 : 2,
-        pointBackgroundColor: '#C4832A',
-        fill: true, tension: 0.4
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
+    data: { labels, datasets: [{ data: vals, borderColor:'#C4832A', backgroundColor:'rgba(196,131,42,0.07)', borderWidth:2, pointRadius: d<=14?4:2, pointBackgroundColor:'#C4832A', fill:true, tension:0.4 }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
       scales: {
-        x: { grid: { color: 'rgba(196,131,42,0.06)' }, ticks: { color: '#8B6B45', font: { family:'Jost', size:10 }, maxTicksLimit:8 } },
-        y: { grid: { color: 'rgba(196,131,42,0.06)' }, ticks: { color: '#8B6B45', font: { family:'Jost', size:10 }, stepSize:1 }, beginAtZero: true }
+        x: { grid:{color:'rgba(196,131,42,0.06)'}, ticks:{color:'#8B6B45',font:{family:'Jost',size:10},maxTicksLimit:8} },
+        y: { grid:{color:'rgba(196,131,42,0.06)'}, ticks:{color:'#8B6B45',font:{family:'Jost',size:10},stepSize:1}, beginAtZero:true }
       }
     }
   });
 }
 
-// ── CATEGORY DOUGHNUT ──────────────────────────────────────
-function renderCatChart(rows, typeF) {
+// ── CAT CHART ─────────────────────────────────────────────
+function renderCatChart(rows) {
   let drinks = 0, foods = 0;
-  rows.forEach(r => { drinks += r.drinkQty; foods += r.foodQty; });
+  rows.forEach(r => { drinks += (r.drinkQty||0); foods += (r.foodQty||0); });
+  const labels=[], vals=[], colors=[];
+  if (drinks>0) { labels.push('Drinks'); vals.push(drinks); colors.push('#C4832A'); }
+  if (foods>0)  { labels.push('Food');   vals.push(foods);  colors.push('#5C2D0E'); }
 
-  const labels = []; const vals = []; const colors = [];
-  if (drinks > 0) { labels.push('Drinks'); vals.push(drinks); colors.push('#C4832A'); }
-  if (foods  > 0) { labels.push('Food');   vals.push(foods);  colors.push('#5C2D0E'); }
-
-  destroyChart('cat');
+  kill('cat');
   charts.cat = new Chart(document.getElementById('cat-chart'), {
-    type: 'doughnut',
-    data: { labels, datasets: [{ data: vals, backgroundColor: colors, borderWidth: 0, hoverOffset: 4 }] },
-    options: {
-      responsive: true, maintainAspectRatio: false, cutout: '65%',
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} units` } }
-      }
-    }
+    type:'doughnut',
+    data:{ labels, datasets:[{ data:vals, backgroundColor:colors, borderWidth:0, hoverOffset:4 }] },
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'65%', plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.raw} units`}} } }
   });
 
-  const total = drinks + foods;
-  document.getElementById('cat-pills').innerHTML = labels.map((l,i) => `
-    <div style="display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;background:rgba(196,131,42,0.07);border:1px solid rgba(196,131,42,0.18);font-size:11px;color:var(--amber-dim);">
-      <div style="width:7px;height:7px;border-radius:50%;background:${colors[i]}"></div>
+  const total = drinks+foods;
+  document.getElementById('cat-pills').innerHTML = labels.map((l,i)=>`
+    <div class="cat-pill">
+      <div class="cat-dot" style="background:${colors[i]}"></div>
       ${l} <strong style="margin-left:2px;">${vals[i]}</strong>
-      <span style="color:var(--text-dim);font-size:10px;">(${total?Math.round(vals[i]/total*100):0}%)</span>
+      <span style="color:var(--text-di);font-size:10px;">(${total?Math.round(vals[i]/total*100):0}%)</span>
     </div>`).join('');
 }
 
-// ── BEST SELLERS (ALL TIME) ────────────────────────────────
-function renderAllTimeBestSellers(rows, typeF) {
-  const items = buildItemCounts(rows, typeF).slice(0, 8);
-  const max   = items[0] ? items[0].count : 1;
-  const el    = document.getElementById('all-time-list');
-  if (!items.length) { el.innerHTML = '<div class="empty">No items recorded yet</div>'; return; }
-  el.innerHTML = items.map((item, i) => `
+// ── BEST SELLERS ─────────────────────────────────────────
+function renderBestSellers(rows, typeF) {
+  const items = buildItems(rows, typeF).slice(0,8);
+  const max   = items[0]?.count || 1;
+  const el    = document.getElementById('all-list');
+  if (!items.length) { el.innerHTML='<div class="empty">No items recorded yet</div>'; return; }
+  el.innerHTML = items.map((item,i)=>`
     <div class="prod-row">
       <div class="prod-rank ${i===0?'gold':''}">${i+1}</div>
       <div class="prod-name">${cap(item.name)}</div>
       <div class="prod-tag ${item.type}">${item.type}</div>
-      <div class="prod-bar-wrap"><div class="prod-bar" style="width:${Math.round(item.count/max*100)}%"></div></div>
-      <div class="prod-count">${item.count}×</div>
+      <div class="prod-bar-bg"><div class="prod-bar" style="width:${Math.round(item.count/max*100)}%"></div></div>
+      <div class="prod-ct">${item.count}×</div>
     </div>`).join('');
 }
 
-// ── THIS WEEK ──────────────────────────────────────────────
+// ── WEEK ITEMS ────────────────────────────────────────────
 function renderWeekItems(rows, typeF) {
-  const weekAgo = new Date(Date.now() - 7*86400000);
-  const recent  = rows.filter(r => new Date(r.lastVisit) >= weekAgo);
-  const items   = buildItemCounts(recent, typeF).slice(0, 8);
-  const max     = items[0] ? items[0].count : 1;
-  const el      = document.getElementById('week-list');
-  if (!items.length) { el.innerHTML = '<div class="empty">No orders this week</div>'; return; }
-  el.innerHTML = items.map((item, i) => `
+  const w7  = new Date(Date.now()-7*86400000);
+  const rec = rows.filter(r=>new Date(r.lastVisit)>=w7);
+  const items = buildItems(rec, typeF).slice(0,8);
+  const max   = items[0]?.count || 1;
+  const el    = document.getElementById('week-list');
+  if (!items.length) { el.innerHTML='<div class="empty">No orders this week</div>'; return; }
+  el.innerHTML = items.map((item,i)=>`
     <div class="prod-row">
       <div class="prod-rank ${i===0?'gold':''}">${i+1}</div>
       <div class="prod-name">${cap(item.name)}</div>
       <div class="prod-tag ${item.type}">${item.type}</div>
-      <div class="prod-bar-wrap"><div class="prod-bar" style="width:${Math.round(item.count/max*100)}%"></div></div>
-      <div class="prod-count">${item.count}×</div>
+      <div class="prod-bar-bg"><div class="prod-bar" style="width:${Math.round(item.count/max*100)}%"></div></div>
+      <div class="prod-ct">${item.count}×</div>
     </div>`).join('');
 }
 
-// ── DRINK / FOOD SEPARATE LISTS ────────────────────────────
-function renderDrinkFoodLists(rows) {
-  const drinks = buildItemCounts(rows, 'drink').slice(0,6);
-  const foods  = buildItemCounts(rows, 'food').slice(0,6);
-  const dMax   = drinks[0] ? drinks[0].count : 1;
-  const fMax   = foods[0]  ? foods[0].count  : 1;
+// ── DRINK / FOOD LISTS ────────────────────────────────────
+function renderDrinkFood(rows) {
+  const drinks = buildItems(rows,'drink').slice(0,6);
+  const foods  = buildItems(rows,'food').slice(0,6);
+  const dMax   = drinks[0]?.count || 1;
+  const fMax   = foods[0]?.count  || 1;
 
-  const dEl = document.getElementById('drink-list');
-  const fEl = document.getElementById('food-list');
-
-  dEl.innerHTML = drinks.length
-    ? drinks.map((item,i) => `
-      <div class="prod-row">
-        <div class="prod-rank ${i===0?'gold':''}">${i+1}</div>
-        <div class="prod-name-lt">${cap(item.name)}</div>
-        <div class="prod-bar-wrap"><div class="prod-bar-lt" style="width:${Math.round(item.count/dMax*100)}%"></div></div>
-        <div class="prod-count-lt">${item.count}×</div>
-      </div>`).join('')
+  document.getElementById('drink-list').innerHTML = drinks.length
+    ? drinks.map((it,i)=>`<div class="prod-row"><div class="prod-rank ${i===0?'gold':''}">${i+1}</div><div class="prod-name-lt">${cap(it.name)}</div><div class="prod-bar-bg-lt"><div class="prod-bar-lt" style="width:${Math.round(it.count/dMax*100)}%"></div></div><div class="prod-ct-lt">${it.count}×</div></div>`).join('')
     : '<div class="empty-lt">No drinks recorded</div>';
 
-  fEl.innerHTML = foods.length
-    ? foods.map((item,i) => `
-      <div class="prod-row">
-        <div class="prod-rank ${i===0?'gold':''}">${i+1}</div>
-        <div class="prod-name-lt">${cap(item.name)}</div>
-        <div class="prod-bar-wrap"><div class="prod-bar-lt" style="width:${Math.round(item.count/fMax*100)}%"></div></div>
-        <div class="prod-count-lt">${item.count}×</div>
-      </div>`).join('')
+  document.getElementById('food-list').innerHTML = foods.length
+    ? foods.map((it,i)=>`<div class="prod-row"><div class="prod-rank ${i===0?'gold':''}">${i+1}</div><div class="prod-name-lt">${cap(it.name)}</div><div class="prod-bar-bg-lt"><div class="prod-bar-lt" style="width:${Math.round(it.count/fMax*100)}%"></div></div><div class="prod-ct-lt">${it.count}×</div></div>`).join('')
     : '<div class="empty-lt">No food recorded</div>';
 }
 
-// ── DAY PATTERN ────────────────────────────────────────────
+// ── DAY PATTERN ───────────────────────────────────────────
 function renderDayPattern(rows) {
-  const days = [0,0,0,0,0,0,0]; // Mon–Sun
-  rows.forEach(r => {
-    const d = (new Date(r.lastVisit).getDay() + 6) % 7;
-    days[d] += r.visitCount;
-  });
-  const max = Math.max(...days, 1);
-  document.getElementById('day-grid').innerHTML = days.map((c,i) => {
-    const lvl = c===0?0:c<=max*0.25?1:c<=max*0.5?2:c<=max*0.75?3:4;
-    return `<div class="day-cell" data-l="${lvl}">${c||''}</div>`;
+  const days = [0,0,0,0,0,0,0];
+  rows.forEach(r => { const d=(new Date(r.lastVisit).getDay()+6)%7; days[d]+=r.visitCount; });
+  const max = Math.max(...days,1);
+  document.getElementById('day-grid').innerHTML = days.map((c,i)=>{
+    const l = c===0?0:c<=max*0.25?1:c<=max*0.5?2:c<=max*0.75?3:4;
+    return `<div class="day-cell" data-l="${l}">${c||''}</div>`;
   }).join('');
 
-  destroyChart('day');
-  charts.day = new Chart(document.getElementById('day-chart'), {
-    type: 'bar',
-    data: {
-      labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
-      datasets: [{
-        data: days,
-        backgroundColor: days.map(v => v === Math.max(...days) ? '#C4832A' : 'rgba(196,131,42,0.22)'),
-        borderRadius: 4, borderSkipped: false
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { grid: { display: false }, ticks: { color: '#8B6B45', font: { family:'Jost', size:10 } } },
-        y: { grid: { color: 'rgba(196,131,42,0.06)' }, ticks: { color: '#8B6B45', font: { family:'Jost', size:10 }, stepSize:1 }, beginAtZero: true }
-      }
-    }
+  kill('day');
+  charts.day = new Chart(document.getElementById('day-chart'),{
+    type:'bar',
+    data:{ labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets:[{ data:days, backgroundColor:days.map(v=>v===Math.max(...days)?'#C4832A':'rgba(196,131,42,0.22)'), borderRadius:4, borderSkipped:false }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{grid:{display:false},ticks:{color:'#8B6B45',font:{family:'Jost',size:10}}}, y:{grid:{color:'rgba(196,131,42,0.06)'},ticks:{color:'#8B6B45',font:{family:'Jost',size:10},stepSize:1},beginAtZero:true} } }
   });
 }
 
-// ── TOP CUSTOMERS ──────────────────────────────────────────
+// ── TOP CUSTOMERS ─────────────────────────────────────────
 function renderTopCustomers(rows) {
-  const sorted = [...rows].sort((a,b) => b.visitCount - a.visitCount).slice(0,10);
+  const sorted = [...rows].sort((a,b)=>b.visitCount-a.visitCount).slice(0,10);
   const tbody  = document.getElementById('c-body');
-  if (!sorted.length) { tbody.innerHTML = '<tr><td colspan="4"><div class="empty-lt">No customers yet</div></td></tr>'; return; }
-  tbody.innerHTML = sorted.map(r => {
+  if (!sorted.length) { tbody.innerHTML='<tr><td colspan="5"><div class="empty-lt">No customers yet</div></td></tr>'; return; }
+  tbody.innerHTML = sorted.map(r=>{
     const s = r.visitCount>=10?['vip','VIP']:r.visitCount>=5?['regular','Regular']:['newc','New'];
     return `<tr>
       <td>${mask(r.phone)}</td>
-      <td style="font-weight:500;color:var(--amber-pale)">${r.visitCount}</td>
-      <td style="color:var(--amber-pale)">${r.totalPoints}</td>
+      <td style="color:var(--amber-pale);font-weight:500;">${r.visitCount}</td>
+      <td style="color:var(--amber-pale);">${r.totalPoints}</td>
+      <td style="color:var(--text-mu);">${r.rewardsClaimed||0}</td>
       <td><span class="badge ${s[0]}">${s[1]}</span></td>
     </tr>`;
   }).join('');
 }
 
-// ── POINTS PROGRESS ────────────────────────────────────────
+// ── POINTS PROGRESS ───────────────────────────────────────
 function renderPtsProgress(rows) {
-  const sorted = [...rows]
-    .filter(r => r.totalPoints > 0)
-    .sort((a,b) => b.totalPoints - a.totalPoints)
-    .slice(0,8);
-  const el = document.getElementById('pts-progress-list');
-  if (!sorted.length) { el.innerHTML = '<div class="empty">No points data yet</div>'; return; }
-  el.innerHTML = sorted.map(r => {
-    const pct = Math.min(100, Math.round(r.totalPoints / GOAL * 100));
+  const sorted = [...rows].filter(r=>r.totalPoints>0).sort((a,b)=>b.totalPoints-a.totalPoints).slice(0,8);
+  const el = document.getElementById('pts-list');
+  if (!sorted.length) { el.innerHTML='<div class="empty">No points data yet</div>'; return; }
+  el.innerHTML = sorted.map(r=>{
+    const pct = Math.min(100, Math.round(r.totalPoints/GOAL*100));
     return `<div class="pts-row">
-      <div class="pts-phone">${mask(r.phone)}</div>
+      <div class="pts-ph">${mask(r.phone)}</div>
       <div class="pts-track"><div class="pts-fill" style="width:${pct}%"></div></div>
-      <div class="pts-num-sm">${r.totalPoints} / ${GOAL}</div>
+      <div class="pts-num">${r.totalPoints} / ${GOAL}</div>
     </div>`;
   }).join('');
 }
 
-// ── KPIs ───────────────────────────────────────────────────
+// ── KPIs ──────────────────────────────────────────────────
 function renderKPIs(rows) {
-  const totalVisits  = rows.reduce((s,r) => s+r.visitCount, 0);
-  const avgVisits    = rows.length ? (totalVisits/rows.length).toFixed(1) : 0;
-  const vipCount     = rows.filter(r => r.visitCount >= 10).length;
-  const weekAgo      = new Date(Date.now() - 7*86400000);
-  const newThisWeek  = allRows.filter(r => new Date(r.firstVisit) >= weekAgo).length;
-  const totalDrinks  = rows.reduce((s,r) => s+r.drinkQty, 0);
-  const totalFoods   = rows.reduce((s,r) => s+r.foodQty, 0);
-  const totalPts     = rows.reduce((s,r) => s+r.totalPoints, 0);
-
-  document.getElementById('k-avg').textContent    = avgVisits;
-  document.getElementById('k-vip').textContent    = vipCount;
-  document.getElementById('k-new').textContent    = newThisWeek;
-  document.getElementById('k-drinks').textContent = totalDrinks;
-  document.getElementById('k-foods').textContent  = totalFoods;
-  document.getElementById('k-pts').textContent    = totalPts;
+  const tv  = rows.reduce((s,r)=>s+r.visitCount,0);
+  const wa  = new Date(Date.now()-7*86400000);
+  document.getElementById('k-avg').textContent    = rows.length?(tv/rows.length).toFixed(1):0;
+  document.getElementById('k-vip').textContent    = rows.filter(r=>r.visitCount>=10).length;
+  document.getElementById('k-new').textContent    = allRows.filter(r=>new Date(r.firstVisit)>=wa).length;
+  document.getElementById('k-drinks').textContent = rows.reduce((s,r)=>s+(r.drinkQty||0),0);
+  document.getElementById('k-foods').textContent  = rows.reduce((s,r)=>s+(r.foodQty||0),0);
+  document.getElementById('k-pts').textContent    = rows.reduce((s,r)=>s+(r.totalPoints||0),0);
 }
 
-// ── HELPERS ────────────────────────────────────────────────
-function buildItemCounts(rows, typeF) {
+// ── HELPERS ───────────────────────────────────────────────
+function buildItems(rows, typeF) {
   const map = {};
   rows.forEach(r => {
-    if ((typeF === 'all' || typeF === 'drink') && r.drinkItem && r.drinkQty > 0) {
+    if (typeF!=='food' && r.drinkItem && (r.drinkQty||0)>0) {
       const k = r.drinkItem.toLowerCase().trim();
-      if (k && k !== 'not specified') map[k] = { count: (map[k]?.count||0) + r.drinkQty, type: 'drink' };
+      if (k && k!=='not specified') { if(!map[k]) map[k]={count:0,type:'drink'}; map[k].count+=r.drinkQty; }
     }
-    if ((typeF === 'all' || typeF === 'food') && r.foodItem && r.foodQty > 0) {
+    if (typeF!=='drink' && r.foodItem && (r.foodQty||0)>0) {
       const k = r.foodItem.toLowerCase().trim();
-      if (k && k !== 'not specified') {
-        if (!map[k]) map[k] = { count: 0, type: 'food' };
-        map[k].count += r.foodQty;
-      }
+      if (k && k!=='not specified') { if(!map[k]) map[k]={count:0,type:'food'}; map[k].count+=r.foodQty; }
     }
   });
-  return Object.entries(map)
-    .map(([name, d]) => ({ name, count: d.count, type: d.type }))
-    .sort((a,b) => b.count - a.count);
+  return Object.entries(map).map(([name,d])=>({name,count:d.count,type:d.type})).sort((a,b)=>b.count-a.count);
 }
 
-function dk(d) { return d.toISOString().split('T')[0]; }
-function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
-function mask(p) { return p && p.length > 5 ? p.slice(0,-4)+'••••' : p; }
-function destroyChart(k) { if(charts[k]) { charts[k].destroy(); delete charts[k]; } }
-function showErr(msg) { document.getElementById('err-body').textContent = msg; document.getElementById('err-box').classList.add('show'); }
-function hideErr() { document.getElementById('err-box').classList.remove('show'); }
-function setRefresh(on) { document.getElementById('btn-r').classList.toggle('spinning', on); }
+function dk(d)   { return d.toISOString().split('T')[0]; }
+function cap(s)  { return s ? s.charAt(0).toUpperCase()+s.slice(1) : ''; }
+function mask(p) { return p&&p.length>5 ? p.slice(0,-4)+'••••' : p; }
+function kill(k) { if(charts[k]){charts[k].destroy();delete charts[k];} }
+function showErr(msg) { document.getElementById('err-body').textContent=msg; document.getElementById('err-box').classList.add('show'); }
+function hideErr()    { document.getElementById('err-box').classList.remove('show'); }
+function setRefresh(on){ document.getElementById('btn-r').classList.toggle('spinning',on); }
 
+// ── START ─────────────────────────────────────────────────
 loadData();
 </script>
 </body>

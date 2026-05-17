@@ -43,48 +43,53 @@ body{display:flex;align-items:flex-start;justify-content:center;padding:24px 16p
 .phone-input{flex:1;border:none;outline:none;background:transparent;padding:0 14px;height:52px;font-size:19px;font-family:"DM Sans",sans-serif;color:var(--black);letter-spacing:.05em;min-width:0}
 .phone-input::placeholder{color:var(--text-dim);font-size:14px}
 /* CATEGORY BUTTONS */
-.cat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
-.cat-btn{height:64px;border-radius:var(--rs);border:1.5px solid var(--cream-3);background:var(--cream);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;transition:all .2s;position:relative;touch-action:manipulation}
+.cat-row{background:var(--cream-2);border-radius:10px;padding:4px;display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:20px;border:1px solid var(--cream-3)}
+.cat-btn{height:44px;border-radius:7px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:background .18s,box-shadow .18s;touch-action:manipulation;position:relative}
 .cat-btn:active{transform:scale(.97)}
-.cat-btn.selected{border-color:var(--black);background:var(--white)}
-.cat-btn.selected::after{content:"";position:absolute;top:0;left:0;right:0;height:2.5px;background:var(--black);border-radius:var(--rs) var(--rs) 0 0}
-.cat-emoji{font-size:20px}
-.cat-label{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted)}
-.cat-btn.selected .cat-label{color:var(--black);font-weight:600}
+.cat-btn.selected{background:var(--black);box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.cat-btn-icon{width:18px;height:18px;opacity:.45;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.cat-btn.selected .cat-btn-icon{opacity:1}
+.cat-btn-icon svg{width:16px;height:16px;stroke:var(--black);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.cat-btn.selected .cat-btn-icon svg{stroke:var(--white)}
+.cat-label{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)}
+.cat-btn.selected .cat-label{color:var(--white)}
 /* ITEMS SCROLL AREA */
-.items-scroll{max-height:300px;overflow-y:auto;margin-bottom:14px;padding-right:2px;scrollbar-width:thin;scrollbar-color:var(--cream-3) transparent}
+.items-scroll{max-height:340px;overflow-y:auto;margin-bottom:14px;padding-right:4px;scrollbar-width:thin;scrollbar-color:var(--cream-3) transparent}
 .items-scroll::-webkit-scrollbar{width:3px}
 .items-scroll::-webkit-scrollbar-thumb{background:var(--cream-3);border-radius:2px}
 /* ITEM SECTION */
-.items-section{margin-bottom:14px}
-.section-label{font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);padding:0 2px;margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.items-section{margin-bottom:16px}
+.section-label{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);padding:0 2px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .section-label::after{content:"";flex:1;height:1px;background:var(--cream-3)}
 /* ITEM BOXES GRID */
-.items-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.item-box{border:1.5px solid var(--cream-3);border-radius:var(--rs);padding:10px 11px;cursor:pointer;background:var(--cream);transition:all .15s;touch-action:manipulation;position:relative;overflow:hidden}
+.items-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.item-box{border:1.5px solid var(--cream-3);border-radius:10px;padding:11px 12px 10px;cursor:pointer;background:var(--white);transition:border-color .15s,background .15s,box-shadow .15s;touch-action:manipulation;position:relative;overflow:hidden}
+.item-box:hover{border-color:var(--black);box-shadow:0 1px 5px rgba(0,0,0,.07)}
 .item-box:active{transform:scale(.97)}
-.item-box.selected{background:var(--black);border-color:var(--black)}
-.item-box-name{font-size:12px;font-weight:500;color:var(--text);line-height:1.35;margin-bottom:5px}
+.item-box.selected{background:var(--black);border-color:var(--black);box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.item-box-name{font-size:12px;font-weight:500;color:var(--black);line-height:1.35;margin-bottom:6px;padding-right:16px}
 .item-box.selected .item-box-name{color:var(--white)}
 .item-box-row{display:flex;align-items:center;justify-content:space-between;gap:4px}
-.item-box-price{font-size:10px;color:var(--text-dim)}
+.item-box-price{font-size:10px;color:var(--text-dim);font-weight:400}
 .item-box.selected .item-box-price{color:rgba(255,255,255,.45)}
-.item-box-pts{font-size:10px;font-weight:600;color:var(--text-muted);background:var(--cream-2);padding:1px 6px;border-radius:20px;white-space:nowrap;flex-shrink:0}
-.item-box.selected .item-box-pts{background:rgba(255,255,255,.15);color:rgba(255,255,255,.8)}
-.item-box-check{position:absolute;top:6px;right:6px;width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
+.item-box-pts{font-size:10px;font-weight:700;color:var(--black);background:var(--cream-2);padding:2px 7px;border-radius:20px;white-space:nowrap;flex-shrink:0;letter-spacing:.02em}
+.item-box.selected .item-box-pts{background:rgba(255,255,255,.18);color:var(--white)}
+.item-box-check{position:absolute;top:7px;right:7px;width:15px;height:15px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
 .item-box.selected .item-box-check{opacity:1}
 /* DOUBLE POINTS BANNER */
 .dbl-banner{background:var(--black);border-radius:var(--rs);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
 .dbl-badge{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;background:rgba(255,255,255,.15);color:var(--white);padding:3px 8px;border-radius:20px;flex-shrink:0}
 .dbl-text{font-size:12px;color:rgba(255,255,255,.8)}
 /* BONUS SECTION */
-.bonus-section{background:var(--cream-2);border:1px solid var(--cream-3);border-radius:var(--rs);padding:12px 14px;margin-bottom:12px}
-.bonus-title{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px}
-.bonus-checks{display:flex;flex-direction:column;gap:8px}
-.bonus-check{display:flex;align-items:center;gap:10px;cursor:pointer;touch-action:manipulation}
+.bonus-section{background:var(--cream);border:1.5px solid var(--cream-3);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.bonus-title{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin-bottom:11px}
+.bonus-checks{display:flex;flex-direction:column;gap:9px}
+.bonus-check{display:flex;align-items:center;gap:10px;cursor:pointer;touch-action:manipulation;padding:8px 10px;background:var(--white);border:1px solid var(--cream-3);border-radius:8px;transition:border-color .15s}
+.bonus-check:has(input:checked){border-color:var(--black);background:var(--white)}
 .bonus-check input{width:16px;height:16px;accent-color:var(--black);cursor:pointer;flex-shrink:0}
-.bonus-check-label{font-size:12px;color:var(--text-muted)}
-.bonus-check-pts{font-size:11px;font-weight:600;color:var(--black);margin-left:auto;flex-shrink:0}
+.bonus-check-label{font-size:12px;color:var(--text-muted);line-height:1.3;flex:1}
+.bonus-check:has(input:checked) .bonus-check-label{color:var(--black);font-weight:500}
+.bonus-check-pts{font-size:11px;font-weight:700;color:var(--black);background:var(--cream-2);padding:2px 8px;border-radius:20px;flex-shrink:0}
 /* POINTS PREVIEW */
 .pts-preview{background:var(--white);border:1.5px solid var(--black);border-radius:var(--rs);padding:12px 16px;margin-bottom:4px;display:none}
 .pts-preview.show{display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -131,7 +136,7 @@ body{display:flex;align-items:flex-start;justify-content:center;padding:24px 16p
 .progress-pts-total{font-size:13px;font-weight:600;color:var(--black)}
 /* REWARD CARD */
 .reward-banner{background:var(--cream-2);border:1px solid var(--cream-3);border-radius:var(--rs);padding:12px 16px;margin-bottom:12px;width:100%;display:flex;align-items:center;gap:12px}
-.reward-banner-icon{font-size:22px;flex-shrink:0}
+.reward-banner-icon{flex-shrink:0;color:var(--black);display:flex;align-items:center}
 .reward-banner-text{font-size:12px;color:var(--text-muted);line-height:1.5}
 .reward-banner-text strong{color:var(--black);font-weight:500;display:block;margin-bottom:2px}
 .btn-done{width:100%;height:48px;background:transparent;border:1.5px solid var(--cream-3);border-radius:var(--rs);font-family:"DM Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);cursor:pointer;transition:border-color .2s,color .2s;touch-action:manipulation}
@@ -192,11 +197,11 @@ body{display:flex;align-items:flex-start;justify-content:center;padding:24px 16p
     <label class="input-label">Category</label>
     <div class="cat-row">
       <div class="cat-btn selected" id="cat-drink" onclick="switchCat('drink')">
-        <span class="cat-emoji">&#9749;</span>
+        <span class="cat-btn-icon"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></span>
         <span class="cat-label">Drinks</span>
       </div>
       <div class="cat-btn" id="cat-food" onclick="switchCat('food')">
-        <span class="cat-emoji">&#127860;</span>
+        <span class="cat-btn-icon"><svg viewBox="0 0 24 24"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></span>
         <span class="cat-label">Food</span>
       </div>
     </div>
@@ -206,21 +211,21 @@ body{display:flex;align-items:flex-start;justify-content:center;padding:24px 16p
 
     <!-- Bonus points -->
     <div class="bonus-section">
-      <div class="bonus-title">&#10024; Bonus Points</div>
+      <div class="bonus-title">Bonus Points</div>
       <div class="bonus-checks">
         <label class="bonus-check">
           <input type="checkbox" id="bonus-cup" onchange="updatePtsPreview()">
-          <span class="bonus-check-label">&#127807; Brought a reusable cup</span>
+          <span class="bonus-check-label">Brought a reusable cup</span>
           <span class="bonus-check-pts">+2 pts</span>
         </label>
         <label class="bonus-check">
           <input type="checkbox" id="bonus-bday" onchange="updatePtsPreview()">
-          <span class="bonus-check-label">&#127874; Birthday week</span>
+          <span class="bonus-check-label">Birthday week</span>
           <span class="bonus-check-pts">+5 pts</span>
         </label>
         <label class="bonus-check">
           <input type="checkbox" id="bonus-new" onchange="updatePtsPreview()">
-          <span class="bonus-check-label">&#127381; Trying a new / seasonal item</span>
+          <span class="bonus-check-label">Trying a new or seasonal item</span>
           <span class="bonus-check-pts">+3 pts</span>
         </label>
       </div>
@@ -289,7 +294,7 @@ body{display:flex;align-items:flex-start;justify-content:center;padding:24px 16p
 
     <!-- Reward unlock banner -->
     <div class="reward-banner" id="reward-banner" style="display:none">
-      <div class="reward-banner-icon">&#127873;</div>
+      <div class="reward-banner-icon"><svg viewBox="0 0 24 24" fill="none" width="22" height="22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
       <div class="reward-banner-text">
         <strong id="reward-banner-title">Reward Unlocked!</strong>
         <span id="reward-banner-sub">Show this to your barista to redeem.</span>
@@ -460,12 +465,12 @@ function updatePtsPreview(){
   const preview=document.getElementById("pts-preview");
   if(!selectedItem){preview.classList.remove("show");return;}
   preview.classList.add("show");
-  const base=calcBasePoints(selectedPrice);
+  const base=currentCat==="drink"?15:10;
   const bonus=calcBonusPoints();
   const total=base+bonus;
   document.getElementById("pts-preview-val").textContent=total;
   const parts=[];
-  parts.push(Math.floor(selectedPrice*POINTS_PER_RWF)+" from purchase");
+  parts.push(base+" from "+(currentCat==="drink"?"drink":"food"));
   if(isTuesday) parts.push("2x Tuesday");
   if(document.getElementById("bonus-cup").checked) parts.push("+"+BONUS.cup+" reusable cup");
   if(document.getElementById("bonus-bday").checked) parts.push("+"+BONUS.bday+" birthday");
@@ -497,26 +502,34 @@ async function handleOrder(){
   err.classList.remove("show");
   if(!selectedItem){err.textContent="Please select an item.";err.classList.add("show");return;}
   setLoading("confirm",true);
-  const totalPts=calcTotalPoints();
   const bonusCup=document.getElementById("bonus-cup").checked;
   const bonusBday=document.getElementById("bonus-bday").checked;
   const bonusNew=document.getElementById("bonus-new").checked;
+  const drinkItem=currentCat==="drink"?selectedItem:"";
+  const drinkQty=currentCat==="drink"?1:0;
+  const foodItem=currentCat==="food"?selectedItem:"";
+  const foodQty=currentCat==="food"?1:0;
   try{
     const url=APPS_SCRIPT_URL+"?action=logVisit&phone="+encodeURIComponent(currentPhone)
-      +"&category="+encodeURIComponent(currentCat)
-      +"&item="+encodeURIComponent(selectedItem)
-      +"&price="+selectedPrice
-      +"&points="+totalPts
+      +"&drinkItem="+encodeURIComponent(drinkItem)
+      +"&drinkQty="+drinkQty
+      +"&foodItem="+encodeURIComponent(foodItem)
+      +"&foodQty="+foodQty
       +"&bonusCup="+(bonusCup?1:0)
       +"&bonusBday="+(bonusBday?1:0)
       +"&bonusNew="+(bonusNew?1:0)
       +"&isTuesday="+(isTuesday?1:0);
     const data=await jsonp(url);
     if(data.success){
-      showSuccessScreen(data, totalPts, bonusCup, bonusBday, bonusNew);
+      showSuccessScreen(data, data.pointsEarned||0, bonusCup, bonusBday, bonusNew);
       launchConfetti();
-    }else{err.textContent=data.error||"Something went wrong.";err.classList.add("show");}
-  }catch(e){err.textContent="Connection error. Please try again.";err.classList.add("show");}
+    }else{err.textContent=data.error||"Check-in failed — please try again.";err.classList.add("show");}
+  }catch(e){
+    const msg=e.message||"";
+    if(msg==="Timeout")err.textContent="Request timed out. Check your connection and try again.";
+    else err.textContent="Could not reach the server. Make sure the Apps Script is deployed correctly.";
+    err.classList.add("show");
+  }
   finally{setLoading("confirm",false);}
 }
 
@@ -529,10 +542,10 @@ function showSuccessScreen(data, ptsEarned, cup, bday, newItem){
 
   // Bonus pills
   const pills=[];
-  if(cup) pills.push("&#127807; +"+BONUS.cup+" reusable cup");
-  if(bday) pills.push("&#127874; +"+BONUS.bday+" birthday");
-  if(newItem) pills.push("&#127381; +"+BONUS.newItem+" new item");
-  if(isTuesday) pills.push("&#10006;2 Tuesday bonus");
+  if(cup) pills.push("+"+BONUS.cup+" reusable cup");
+  if(bday) pills.push("+"+BONUS.bday+" birthday");
+  if(newItem) pills.push("+"+BONUS.newItem+" new item");
+  if(isTuesday) pills.push("x2 Tuesday bonus");
   document.getElementById("pts-bonus-pills").innerHTML=pills.map(p=>"<span class=\"pts-bonus-pill\">"+p+"</span>").join("");
 
   // Progress
@@ -557,7 +570,7 @@ function showSuccessScreen(data, ptsEarned, cup, bday, newItem){
   // Reward banner
   const justUnlocked=REWARDS.find(r=>total>=r.pts&&(total-ptsEarned)<r.pts);
   if(justUnlocked){
-    document.getElementById("reward-banner-title").textContent="&#127873; Reward Unlocked!";
+    document.getElementById("reward-banner-title").textContent="Reward Unlocked!";
     document.getElementById("reward-banner-sub").textContent=justUnlocked.label+" — show this to your barista.";
     document.getElementById("reward-banner").style.display="flex";
   }

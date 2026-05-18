@@ -194,7 +194,7 @@ body{min-height:100vh;background:var(--cream);font-family:'DM Sans',sans-serif;c
         <path d="M10 2v3h3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M5 7h6M5 10h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
       </svg>
-      Weekly Report
+      Monthly Report
     </button>
     <button class="btn-refresh" id="btn-r" onclick="loadData()">
       <svg viewBox="0 0 16 16" fill="none">
@@ -516,14 +516,14 @@ function setRefresh(on){document.getElementById('btn-r').classList.toggle('spinn
 function generateReport(){
   if(!allRows.length){alert('Load data first, then generate the report.');return;}
   const now=new Date();
-  const weekAgo=new Date(now-7*86400000);
-  const weekRows=allRows.filter(r=>new Date(r.lastVisit)>=weekAgo);
-  const totalVisits=weekRows.reduce((s,r)=>s+r.visitCount,0);
-  const newCustomers=allRows.filter(r=>new Date(r.firstVisit)>=weekAgo).length;
-  const totalPts=weekRows.reduce((s,r)=>s+r.totalPoints,0);
+  const monthAgo=new Date(now-30*86400000);
+  const monthRows=allRows.filter(r=>new Date(r.lastVisit)>=monthAgo);
+  const totalVisits=monthRows.reduce((s,r)=>s+r.visitCount,0);
+  const newCustomers=allRows.filter(r=>new Date(r.firstVisit)>=monthAgo).length;
+  const totalPts=monthRows.reduce((s,r)=>s+r.totalPoints,0);
   const nearGoal=allRows.filter(r=>r.totalPoints>=GOAL*0.8&&r.totalPoints<GOAL).length;
   const atGoal=allRows.filter(r=>r.totalPoints>=GOAL).length;
-  const items=buildItems(weekRows,'all').slice(0,5);
+  const items=buildItems(monthRows,'all').slice(0,5);
   const topCusts=allRows.slice().sort((a,b)=>b.totalPoints-a.totalPoints).slice(0,5);
 
   const fmt=d=>d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
@@ -533,7 +533,7 @@ function generateReport(){
   const custRows=topCusts.map((r,i)=>`<tr><td>${i+1}</td><td>${mask(r.phone)}</td><td style="text-align:right">${r.totalPoints}</td><td style="text-align:right">${r.visitCount}</td></tr>`).join('');
 
   const html=`<!DOCTYPE html><html><head><meta charset="UTF-8">
-<title>BLOOMiN Weekly Report — ${fmt(weekAgo)} to ${fmt(now)}</title>
+<title>BLOOMiN Monthly Report — ${fmt(monthAgo)} to ${fmt(now)}</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:#fff;color:#1a1a1a;padding:48px;max-width:780px;margin:0 auto}
@@ -553,11 +553,11 @@ function generateReport(){
   @media print{body{padding:24px}.kpis{page-break-inside:avoid}}
 </style></head><body>
 <div class="logo">BLOOMiN</div>
-<div class="subtitle">Loyalty Programme — Weekly Report</div>
-<div class="period">Period: ${fmt(weekAgo)} &rarr; ${fmt(now)}</div>
+<div class="subtitle">Loyalty Programme — Monthly Report</div>
+<div class="period">Period: ${fmt(monthAgo)} &rarr; ${fmt(now)}</div>
 <div class="kpis">
-  <div class="kpi"><div class="kpi-val">${totalVisits}</div><div class="kpi-lbl">Visits this week</div></div>
-  <div class="kpi"><div class="kpi-val">${weekRows.length}</div><div class="kpi-lbl">Active customers</div></div>
+  <div class="kpi"><div class="kpi-val">${totalVisits}</div><div class="kpi-lbl">Visits this month</div></div>
+  <div class="kpi"><div class="kpi-val">${weekRows.length}</div><div class="kpi-lbl">Active this month</div></div>
   <div class="kpi"><div class="kpi-val">${newCustomers}</div><div class="kpi-lbl">New customers</div></div>
   <div class="kpi"><div class="kpi-val">${totalPts}</div><div class="kpi-lbl">Points earned</div></div>
 </div>

@@ -149,6 +149,26 @@ body{display:flex;align-items:flex-start;justify-content:center;padding:24px 16p
 .confetti-wrap{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999;overflow:hidden}
 .confetti-piece{position:absolute;width:7px;height:9px;border-radius:2px;opacity:0;animation:fall 2s ease-in forwards}
 @keyframes fall{0%{opacity:1;transform:translateY(-10px) rotate(0deg)}100%{opacity:0;transform:translateY(100vh) rotate(540deg)}}
+/* NAME INPUT */
+.name-input{width:100%;border:1.5px solid var(--cream-3);border-radius:var(--rs);outline:none;background:var(--cream);padding:0 14px;height:52px;font-size:16px;font-family:"DM Sans",sans-serif;color:var(--black);transition:border-color .2s;display:block}
+.name-input:focus{border-color:var(--black)}
+.name-input::placeholder{color:var(--text-dim);font-size:14px}
+/* ITEM QTY CONTROLS */
+.item-add-btn{background:var(--black);border:none;border-radius:6px;color:var(--white);font-size:16px;font-weight:600;width:26px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;touch-action:manipulation;line-height:1}
+.item-qty-ctrl{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.item-qty-ctrl button{background:rgba(255,255,255,.2);border:none;border-radius:5px;color:var(--white);font-size:14px;font-weight:600;width:24px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;line-height:1}
+.item-qty-ctrl span{font-size:13px;font-weight:700;color:var(--white);min-width:16px;text-align:center}
+/* REVIEW STEP */
+.star-row{display:flex;gap:8px;justify-content:center;margin:18px 0 6px}
+.star{width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;transition:transform .15s}
+.star:active{transform:scale(.82)}
+.star svg{width:34px;height:34px;stroke:var(--cream-3);fill:transparent;stroke-width:1.6;transition:stroke .15s,fill .15s}
+.star.active svg{stroke:var(--black);fill:var(--black)}
+.review-hint{font-size:11px;color:var(--text-dim);text-align:center;margin-bottom:14px;min-height:16px}
+.review-textarea{width:100%;border:1.5px solid var(--cream-3);border-radius:var(--rs);outline:none;background:var(--cream);padding:12px 14px;font-size:14px;font-family:"DM Sans",sans-serif;color:var(--black);resize:none;transition:border-color .2s;margin-top:14px}
+.review-textarea:focus{border-color:var(--black)}
+.review-textarea::placeholder{color:var(--text-dim)}
+.btn-skip{width:100%;background:transparent;border:none;font-family:"DM Sans",sans-serif;font-size:11px;letter-spacing:.14em;color:var(--text-dim);text-transform:uppercase;cursor:pointer;padding:12px;margin-top:2px;touch-action:manipulation}
 </style>
 </head>
 <body>
@@ -164,12 +184,15 @@ body{display:flex;align-items:flex-start;justify-content:center;padding:24px 16p
     <div class="step-dot active" id="dot-1"></div>
     <div class="step-dot" id="dot-2"></div>
     <div class="step-dot" id="dot-3"></div>
+    <div class="step-dot" id="dot-4"></div>
   </div>
 
   <!-- STEP 1: PHONE -->
   <div class="card active" id="card-phone">
-    <div class="card-title">Enter Your Number</div>
-    <div class="card-sub">We track your visits and reward your loyalty.</div>
+    <div class="card-title">Enter Your Details</div>
+    <div class="card-sub">We'll track your visits and reward your loyalty.</div>
+    <label class="input-label" for="cust-name">Your Name</label>
+    <input class="name-input" id="cust-name" type="text" placeholder="e.g. Alice" autocomplete="name" style="margin-bottom:14px">
     <label class="input-label" for="phone">Phone Number</label>
     <div class="phone-row">
       <div class="phone-prefix">+250</div>
@@ -248,6 +271,28 @@ body{display:flex;align-items:flex-start;justify-content:center;padding:24px 16p
     <button class="btn-ghost" onclick="goBack()">&#8592; Back</button>
   </div>
 
+
+  <!-- STEP 3: REVIEW -->
+  <div class="card" id="card-review">
+    <div class="card-title">How Was Your Visit?</div>
+    <div class="card-sub">Share a quick rating or note. Totally optional.</div>
+    <div class="star-row" id="star-row">
+      <div class="star" onclick="setStar(1)"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      <div class="star" onclick="setStar(2)"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      <div class="star" onclick="setStar(3)"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      <div class="star" onclick="setStar(4)"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      <div class="star" onclick="setStar(5)"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+    </div>
+    <div class="review-hint" id="review-hint"></div>
+    <label class="input-label" style="margin-top:4px">Your Comment <span style="font-weight:300;text-transform:none;letter-spacing:0">(optional)</span></label>
+    <textarea class="review-textarea" id="review-text" rows="3" placeholder="Tell us what you loved or what we could improve..."></textarea>
+    <button class="btn" id="btn-review" onclick="handleReview()">
+      <span id="btn-review-text">Submit Feedback</span>
+      <div class="spinner" id="btn-review-spinner"></div>
+    </button>
+    <button class="btn-skip" onclick="skipReview()">Skip &#8594;</button>
+  </div>
+
   <!-- SUCCESS -->
   <div class="success-screen" id="success-screen">
     <div class="check-ring">
@@ -314,8 +359,6 @@ body{display:flex;align-items:flex-start;justify-content:center;padding:24px 16p
 <script>
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwf5lgEs2u000qdbMy4B58jruJRgyLZhtVUiSgiTlP9YEzqs2NXAJmbuJ2xeOhK4Z4z/exec";
 
-// ── POINTS SYSTEM ────────────────────────────────────────
-const POINTS_PER_RWF = 1/500; // 1 pt per 500 RWF
 const BONUS = {cup:2, bday:5, newItem:3};
 const REWARDS = [
   {pts:50,  label:"Free drip coffee or tea"},
@@ -325,13 +368,14 @@ const REWARDS = [
   {pts:300, label:"Coffee for a Friend (two drinks)"}
 ];
 const TIERS = [
-  {min:0,   max:199, name:"Regular",      cls:""},
-  {min:200, max:499, name:"Regular+",     cls:"regular-plus"},
+  {min:0,   max:199,    name:"Regular",   cls:""},
+  {min:200, max:499,    name:"Regular+",  cls:"regular-plus"},
   {min:500, max:999999, name:"Loyal",     cls:"loyal"}
 ];
 const isTuesday = new Date().getDay() === 2;
 
-// ── MENU ─────────────────────────────────────────────────
+const STAR_LABELS = ["","Not great","Could be better","It was okay","Really good","Absolutely loved it"];
+
 const MENU = {
   drink:[
     {group:"Hot Coffee",items:[
@@ -355,43 +399,19 @@ const MENU = {
     ]},
     {group:"Herbal Tea",items:[
       {n:"Mint Tea",p:2500},{n:"Green Tea",p:2500},{n:"Black Tea",p:2500},
-      {n:"Rosemary Tea",p:2500},{n:"Lemongrass Tea",p:2500},{n:"Ginger Tea",p:2500},
-      {n:"African Tea",p:2500},{n:"Spiced Tea / Dawa Tea",p:3000},{n:"Passion Dawa Tea",p:3500},
-      {n:"Rooibos Tea",p:3500},{n:"Chamomile Tea",p:3500},
-      {n:"Bloomin Blended Tea",p:4000},{n:"Hot Tropical Fruits Tea",p:4000}
+      {n:"Ginger Tea",p:2500},{n:"Hibiscus Tea",p:2500},{n:"Rooibos Tea",p:2500}
     ]},
-    {group:"Smoothies",items:[
-      {n:"Mango Smoothie",p:4000},{n:"Peanut Butter & Tree Tomato",p:4000},
-      {n:"Banana Smoothie",p:4000},{n:"Cookie Mango Smoothie",p:4000},
-      {n:"Mango Cinnamon Smoothie",p:4000},{n:"Bloomin Spiced Smoothie",p:4000},
-      {n:"Fresh Tropical Fruits Smoothie",p:4000},{n:"Espresso Passion Nuts Smoothie",p:4000},
-      {n:"Nuts Mango Smoothie",p:4000},{n:"Bloomin Passion Smoothie",p:4000},
-      {n:"Tree Tomato Breeze",p:4000},{n:"Bloomin Brain Booster",p:4000},
-      {n:"Pineapple Banana Smoothie",p:4000},{n:"Orange Spiced Smoothie",p:4000},
-      {n:"Mango & Passion Smoothie",p:4000}
-    ]},
-    {group:"Milkshakes & Freeze",items:[
-      {n:"Tropical Bloom Shake",p:4000},{n:"Coffee Honey Shake",p:4000},
-      {n:"Chocolate Shake",p:4000},{n:"Nutty Shake",p:4000},{n:"Berry Shake",p:4000},
-      {n:"Caramel Spice Shake",p:4000},{n:"Ginger Shake",p:4000},{n:"Oreo Milkshake",p:4000},
-      {n:"Chocolate Milkshake",p:4000},{n:"Vanilla Milkshake",p:4000},
-      {n:"Coconut Milkshake",p:4000},{n:"Frozen Ginger Lemonade",p:4000},{n:"Frozen Mint Lemonade",p:4500}
-    ]},
-    {group:"Fresh Juices & Detox",items:[
-      {n:"Mango Juice",p:4000},{n:"Pineapple Juice",p:4000},{n:"Tree Tomato Juice",p:4000},
-      {n:"Passion Juice",p:4000},{n:"Fresh Squeezed Orange Juice",p:4500},
-      {n:"Carrot, Ginger & Pineapple Detox",p:4000},{n:"Fresh Green Detox",p:4000},
-      {n:"Pineapple, Ginger & Cucumber Detox",p:4000},{n:"Passion, Ginger & Mint Carrot Detox",p:4000}
+    {group:"Other Beverages",items:[
+      {n:"Fresh Orange Juice",p:3500},{n:"Watermelon Juice",p:3500},
+      {n:"Passion Fruit Juice",p:3500},{n:"Mango Smoothie",p:4000},
+      {n:"Avocado Smoothie",p:4000},{n:"Sparkling Water",p:2000},{n:"Still Water",p:1500}
     ]}
   ],
   food:[
-    {group:"Pastries & Bakes",items:[
-      {n:"Butter Croissant",p:2500},{n:"Chocolate Croissant",p:2500},{n:"Almond Croissant",p:3000},
-      {n:"Blueberry Muffin",p:2500},{n:"Banana Bread",p:2500},{n:"Cinnamon Roll",p:3000}
-    ]},
-    {group:"Sandwiches & Wraps",items:[
-      {n:"Chicken Club Sandwich",p:5000},{n:"Tuna Melt Sandwich",p:4500},
-      {n:"Veggie Wrap",p:4000},{n:"BLT Sandwich",p:4500},{n:"Avocado Toast",p:4000}
+    {group:"Pastries & Breads",items:[
+      {n:"Butter Croissant",p:2500},{n:"Almond Croissant",p:3000},{n:"Pain au Chocolat",p:3000},
+      {n:"Banana Bread",p:2500},{n:"Cinnamon Roll",p:3000},{n:"Sourdough Toast",p:2000},
+      {n:"Avocado Toast",p:4000},{n:"Egg Toast",p:3500}
     ]},
     {group:"Light Bites",items:[
       {n:"Garden Salad",p:4000},{n:"Fruit Bowl",p:3500},
@@ -404,22 +424,22 @@ const MENU = {
   ]
 };
 
-let currentCat="drink", selectedItem="", selectedPrice=0, currentPhone="";
+// ── STATE ─────────────────────────────────────────────────
+let cart = [];          // [{name, type, qty, price}]
+let currentName = "";
+let currentPhone = "";
+let currentCat = "drink";
+let lastOrderData = null;
+let lastBonuses = {};
+let selectedStars = 0;
 
-// ── POINTS CALC ───────────────────────────────────────────
-function calcBasePoints(price){
-  const pts = Math.floor(price * POINTS_PER_RWF);
-  return isTuesday ? pts * 2 : pts;
-}
+// ── BONUS POINTS ──────────────────────────────────────────
 function calcBonusPoints(){
   let b=0;
-  if(document.getElementById("bonus-cup").checked) b+=BONUS.cup;
+  if(document.getElementById("bonus-cup").checked)  b+=BONUS.cup;
   if(document.getElementById("bonus-bday").checked) b+=BONUS.bday;
-  if(document.getElementById("bonus-new").checked) b+=BONUS.newItem;
+  if(document.getElementById("bonus-new").checked)  b+=BONUS.newItem;
   return isTuesday ? b*2 : b;
-}
-function calcTotalPoints(){
-  return calcBasePoints(selectedPrice) + calcBonusPoints();
 }
 
 // ── RENDER ITEMS ──────────────────────────────────────────
@@ -430,50 +450,63 @@ function renderItems(cat){
       +"<div class=\"section-label\">"+g.group+"</div>"
       +"<div class=\"items-grid\">"
       +g.items.map(function(it){
-        const basePts=Math.floor(it.p*POINTS_PER_RWF);
-        const displayPts=isTuesday?basePts*2:basePts;
-        const sel=selectedItem===it.n?" selected":"";
-        return "<div class=\"item-box"+sel+"\" onclick=\"selectItem(this,'"+it.n.replace(/'/g,"\\'")+"',"+it.p+")\">"
-          +"<div class=\"item-box-check\"><svg viewBox=\"0 0 10 10\" fill=\"none\" width=\"8\" height=\"8\"><path d=\"M1.5 5l2.5 2.5 4.5-4.5\" stroke=\"white\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></div>"
+        const inCart=cart.find(function(i){return i.name===it.n;});
+        const qty=inCart?inCart.qty:0;
+        const sel=qty>0?" selected":"";
+        const safeName=it.n.replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+        const ctrl=qty===0
+          ?"<button class=\"item-add-btn\" onclick=\"addToCart('"+safeName+"','"+cat+"',"+it.p+");event.stopPropagation()\">+</button>"
+          :"<div class=\"item-qty-ctrl\"><button onclick=\"changeQty('"+safeName+"',-1);event.stopPropagation()\">&#8722;</button><span>"+qty+"</span><button onclick=\"changeQty('"+safeName+"',1);event.stopPropagation()\">+</button></div>";
+        return "<div class=\"item-box"+sel+"\">"
           +"<div class=\"item-box-name\">"+it.n+"</div>"
           +"<div class=\"item-box-row\">"
           +"<span class=\"item-box-price\">"+it.p.toLocaleString()+" RWF</span>"
-          +"<span class=\"item-box-pts\">"+displayPts+" pts"+(isTuesday?"&times;2":"")+"</span>"
+          +ctrl
           +"</div></div>";
       }).join("")
       +"</div></div>";
   }).join("");
 }
 
-function selectItem(el, name, price){
-  selectedItem=name; selectedPrice=price;
-  renderItems(currentCat);
-  updatePtsPreview();
+function addToCart(name,type,price){
+  const ex=cart.find(function(i){return i.name===name;});
+  if(ex){ex.qty++;}else{cart.push({name:name,type:type,qty:1,price:price});}
+  renderItems(currentCat);updatePtsPreview();
   document.getElementById("order-error").classList.remove("show");
 }
 
+function changeQty(name,delta){
+  const idx=cart.findIndex(function(i){return i.name===name;});
+  if(idx===-1)return;
+  cart[idx].qty+=delta;
+  if(cart[idx].qty<=0)cart.splice(idx,1);
+  renderItems(currentCat);updatePtsPreview();
+}
+
 function switchCat(cat){
-  currentCat=cat; selectedItem=""; selectedPrice=0;
+  currentCat=cat;
   document.getElementById("cat-drink").classList.toggle("selected",cat==="drink");
   document.getElementById("cat-food").classList.toggle("selected",cat==="food");
-  renderItems(cat);
-  updatePtsPreview();
+  renderItems(cat);updatePtsPreview();
   document.getElementById("order-error").classList.remove("show");
 }
 
 function updatePtsPreview(){
   const preview=document.getElementById("pts-preview");
-  if(!selectedItem){preview.classList.remove("show");return;}
+  const dQty=cart.filter(function(i){return i.type==="drink";}).reduce(function(s,i){return s+i.qty;},0);
+  const fQty=cart.filter(function(i){return i.type==="food"; }).reduce(function(s,i){return s+i.qty;},0);
+  if(dQty===0&&fQty===0){preview.classList.remove("show");return;}
   preview.classList.add("show");
-  const base=currentCat==="drink"?15:10;
+  const base=dQty*15+fQty*10;
   const bonus=calcBonusPoints();
-  const total=base+bonus;
+  const total=isTuesday?(base+bonus)*2:(base+bonus);
   document.getElementById("pts-preview-val").textContent=total;
   const parts=[];
-  parts.push(base+" from "+(currentCat==="drink"?"drink":"food"));
-  if(isTuesday) parts.push("2x Tuesday");
+  if(dQty>0)parts.push((dQty*15)+" from "+dQty+" drink"+(dQty>1?"s":""));
+  if(fQty>0)parts.push((fQty*10)+" from "+fQty+" food"+(fQty>1?" item":" item")+(fQty>1?"s":""));
+  if(isTuesday)parts.push("x2 Tuesday");
   if(document.getElementById("bonus-cup").checked) parts.push("+"+BONUS.cup+" reusable cup");
-  if(document.getElementById("bonus-bday").checked) parts.push("+"+BONUS.bday+" birthday");
+  if(document.getElementById("bonus-bday").checked)parts.push("+"+BONUS.bday+" birthday");
   if(document.getElementById("bonus-new").checked) parts.push("+"+BONUS.newItem+" new item");
   document.getElementById("pts-breakdown").textContent=parts.join(" · ");
 }
@@ -489,7 +522,8 @@ function handlePhone(){
     err.classList.add("show");return;
   }
   currentPhone="+250"+cleaned;
-  if(isTuesday) document.getElementById("dbl-banner").style.display="flex";
+  currentName=document.getElementById("cust-name").value.trim();
+  if(isTuesday)document.getElementById("dbl-banner").style.display="flex";
   renderItems(currentCat);
   showStep(2);
 }
@@ -500,15 +534,17 @@ function goBack(){showStep(1);}
 async function handleOrder(){
   const err=document.getElementById("order-error");
   err.classList.remove("show");
-  if(!selectedItem){err.textContent="Please select an item.";err.classList.add("show");return;}
+  if(cart.length===0){err.textContent="Please select at least one item.";err.classList.add("show");return;}
   setLoading("confirm",true);
   const bonusCup=document.getElementById("bonus-cup").checked;
   const bonusBday=document.getElementById("bonus-bday").checked;
   const bonusNew=document.getElementById("bonus-new").checked;
-  const drinkItem=currentCat==="drink"?selectedItem:"";
-  const drinkQty=currentCat==="drink"?1:0;
-  const foodItem=currentCat==="food"?selectedItem:"";
-  const foodQty=currentCat==="food"?1:0;
+  const drinkItems=cart.filter(function(i){return i.type==="drink";});
+  const foodItems=cart.filter(function(i){return i.type==="food";});
+  const drinkItem=drinkItems.length?drinkItems[0].name:"";
+  const drinkQty=drinkItems.reduce(function(s,i){return s+i.qty;},0);
+  const foodItem=foodItems.length?foodItems[0].name:"";
+  const foodQty=foodItems.reduce(function(s,i){return s+i.qty;},0);
   try{
     const url=APPS_SCRIPT_URL+"?action=logVisit&phone="+encodeURIComponent(currentPhone)
       +"&drinkItem="+encodeURIComponent(drinkItem)
@@ -521,11 +557,13 @@ async function handleOrder(){
       +"&isTuesday="+(isTuesday?1:0);
     const data=await jsonp(url);
     if(data.success){
-      showSuccessScreen(data, data.pointsEarned||0, bonusCup, bonusBday, bonusNew);
+      lastOrderData=data;
+      lastBonuses={cup:bonusCup,bday:bonusBday,newItem:bonusNew};
       launchConfetti();
+      showStep(3);
     }else{err.textContent=data.error||"Check-in failed — please try again.";err.classList.add("show");}
-  }catch(e){
-    const msg=e.message||"";
+  }catch(ex){
+    const msg=ex.message||"";
     if(msg==="Timeout")err.textContent="Request timed out. Check your connection and try again.";
     else err.textContent="Could not reach the server. Make sure the Apps Script is deployed correctly.";
     err.classList.add("show");
@@ -533,61 +571,101 @@ async function handleOrder(){
   finally{setLoading("confirm",false);}
 }
 
-function showSuccessScreen(data, ptsEarned, cup, bday, newItem){
-  document.getElementById("success-msg").textContent=data.message||"Thanks for visiting BLOOMiN!";
-  document.getElementById("order-item-name").textContent=selectedItem;
-  document.getElementById("order-cat-label").textContent=currentCat==="drink"?"Drink":"Food";
+// ── STEP 3: REVIEW ────────────────────────────────────────
+function setStar(n){
+  selectedStars=n;
+  document.querySelectorAll(".star").forEach(function(s,i){s.classList.toggle("active",i<n);});
+  document.getElementById("review-hint").textContent=STAR_LABELS[n]||"";
+}
+
+async function handleReview(){
+  const rating=selectedStars;
+  const comment=document.getElementById("review-text").value.trim();
+  if(rating>0||comment){
+    setLoading("review",true);
+    const url=APPS_SCRIPT_URL+"?action=submitReview"
+      +"&phone="+encodeURIComponent(currentPhone)
+      +"&name="+encodeURIComponent(currentName)
+      +"&rating="+rating
+      +"&comment="+encodeURIComponent(comment);
+    try{await jsonp(url);}catch(e){}
+    setLoading("review",false);
+  }
+  showSuccessFromReview();
+}
+
+function skipReview(){showSuccessFromReview();}
+
+function showSuccessFromReview(){
+  showSuccessScreen(lastOrderData,lastOrderData.pointsEarned||0,lastBonuses.cup,lastBonuses.bday,lastBonuses.newItem);
+}
+
+// ── STEP 4: SUCCESS ───────────────────────────────────────
+function showSuccessScreen(data,ptsEarned,cup,bday,newItem){
+  let msg=data.message||"Thanks for visiting BLOOMiN!";
+  if(currentName){
+    msg=msg.replace(/^Welcome to BLOOMiN!/,"Welcome to BLOOMiN, "+currentName+"!")
+           .replace(/^Welcome back!/,"Welcome back, "+currentName+"!");
+  }
+  document.getElementById("success-msg").textContent=msg;
+
+  const itemNames=cart.map(function(i){return(i.qty>1?i.qty+"x ":"")+i.name;}).join(", ");
+  document.getElementById("order-item-name").textContent=itemNames||"\u2014";
+  const hasDrink=cart.some(function(i){return i.type==="drink";});
+  const hasFood=cart.some(function(i){return i.type==="food";});
+  document.getElementById("order-cat-label").textContent=hasDrink&&hasFood?"Drink & Food":hasDrink?"Drink":"Food";
+
   document.getElementById("pts-earned-num").textContent=ptsEarned;
   document.getElementById("pts-earned-total").textContent="Total: "+(data.totalPoints||0)+" pts lifetime";
 
-  // Bonus pills
   const pills=[];
-  if(cup) pills.push("+"+BONUS.cup+" reusable cup");
-  if(bday) pills.push("+"+BONUS.bday+" birthday");
-  if(newItem) pills.push("+"+BONUS.newItem+" new item");
-  if(isTuesday) pills.push("x2 Tuesday bonus");
-  document.getElementById("pts-bonus-pills").innerHTML=pills.map(p=>"<span class=\"pts-bonus-pill\">"+p+"</span>").join("");
+  if(cup)    pills.push("+"+BONUS.cup+" reusable cup");
+  if(bday)   pills.push("+"+BONUS.bday+" birthday");
+  if(newItem)pills.push("+"+BONUS.newItem+" new item");
+  if(isTuesday)pills.push("x2 Tuesday bonus");
+  document.getElementById("pts-bonus-pills").innerHTML=pills.map(function(p){return"<span class=\"pts-bonus-pill\">"+p+"</span>";}).join("");
 
-  // Progress
   const total=data.totalPoints||0;
-  const nextReward=REWARDS.find(r=>r.pts>total);
-  const prevReward=REWARDS.filter(r=>r.pts<=total).slice(-1)[0];
+  const nextReward=REWARDS.find(function(r){return r.pts>total;});
+  const prevReward=REWARDS.filter(function(r){return r.pts<=total;}).slice(-1)[0];
   const prevPts=prevReward?prevReward.pts:0;
   const nextPts=nextReward?nextReward.pts:REWARDS[REWARDS.length-1].pts;
   const pct=nextReward?Math.min(100,Math.round((total-prevPts)/(nextPts-prevPts)*100)):100;
-  setTimeout(()=>{document.getElementById("prog-fill").style.width=pct+"%";},200);
+  setTimeout(function(){document.getElementById("prog-fill").style.width=pct+"%";},200);
   document.getElementById("prog-total").textContent=total+" pts total";
   document.getElementById("prog-next").innerHTML=nextReward
     ?"Next: <strong>"+nextReward.label+"</strong> at "+nextReward.pts+" pts"
     :"<strong>All rewards unlocked!</strong>";
 
-  // Tier
-  const tier=TIERS.find(t=>total>=t.min&&total<=t.max)||TIERS[0];
+  const tier=TIERS.find(function(t){return total>=t.min&&total<=t.max;})||TIERS[0];
   const tBadge=document.getElementById("tier-badge");
   tBadge.textContent=tier.name;
   tBadge.className="progress-tier"+(tier.cls?" "+tier.cls:"");
 
-  // Reward banner
-  const justUnlocked=REWARDS.find(r=>total>=r.pts&&(total-ptsEarned)<r.pts);
+  const justUnlocked=REWARDS.find(function(r){return total>=r.pts&&(total-ptsEarned)<r.pts;});
   if(justUnlocked){
     document.getElementById("reward-banner-title").textContent="Reward Unlocked!";
     document.getElementById("reward-banner-sub").textContent=justUnlocked.label+" — show this to your barista.";
     document.getElementById("reward-banner").style.display="flex";
   }
-
-  showStep(3);
+  showStep(4);
 }
 
 function reset(){
-  selectedItem=""; selectedPrice=0; currentPhone=""; currentCat="drink";
+  cart=[];currentName="";currentPhone="";currentCat="drink";
+  lastOrderData=null;lastBonuses={};selectedStars=0;
   document.getElementById("phone").value="";
+  document.getElementById("cust-name").value="";
   document.getElementById("phone-error").classList.remove("show");
   document.getElementById("order-error").classList.remove("show");
   document.getElementById("pts-preview").classList.remove("show");
   document.getElementById("pts-bonus-pills").innerHTML="";
   document.getElementById("reward-banner").style.display="none";
   document.getElementById("dbl-banner").style.display="none";
-  document.querySelectorAll(".bonus-check input").forEach(c=>c.checked=false);
+  document.getElementById("review-text").value="";
+  document.getElementById("review-hint").textContent="";
+  document.querySelectorAll(".star").forEach(function(s){s.classList.remove("active");});
+  document.querySelectorAll(".bonus-check input").forEach(function(c){c.checked=false;});
   document.getElementById("success-screen").classList.remove("show");
   document.getElementById("prog-fill").style.width="0%";
   switchCat("drink");
@@ -608,21 +686,25 @@ function jsonp(url){
 function showStep(n){
   document.getElementById("card-phone").classList.toggle("active",n===1);
   document.getElementById("card-order").classList.toggle("active",n===2);
-  document.getElementById("success-screen").classList.toggle("show",n===3);
-  if(n===3){
-    document.getElementById("card-phone").classList.remove("active");
-    document.getElementById("card-order").classList.remove("active");
+  document.getElementById("card-review").classList.toggle("active",n===3);
+  document.getElementById("success-screen").classList.toggle("show",n===4);
+  if(n===4){
+    ["card-phone","card-order","card-review"].forEach(function(id){
+      document.getElementById(id).classList.remove("active");
+    });
   }
-  ["dot-1","dot-2","dot-3"].forEach(function(id,i){
+  ["dot-1","dot-2","dot-3","dot-4"].forEach(function(id,i){
     document.getElementById(id).classList.toggle("active",i+1===n);
   });
   window.scrollTo({top:0,behavior:"smooth"});
 }
+
 function setLoading(btn,on){
   document.getElementById("btn-"+btn).disabled=on;
   document.getElementById("btn-"+btn+"-text").style.display=on?"none":"block";
   document.getElementById("btn-"+btn+"-spinner").style.display=on?"block":"none";
 }
+
 function launchConfetti(){
   var wrap=document.getElementById("confetti");wrap.innerHTML="";
   var cols=["#1A1A1A","#3D3D3D","#D8D2C6","#9A9490","#F7F4EF"];
@@ -633,7 +715,9 @@ function launchConfetti(){
   }
   setTimeout(function(){wrap.innerHTML="";},3200);
 }
+
 document.getElementById("phone").addEventListener("keydown",function(e){if(e.key==="Enter")handlePhone();});
+document.getElementById("cust-name").addEventListener("keydown",function(e){if(e.key==="Enter")document.getElementById("phone").focus();});
 </script>
 </body>
 </html>
